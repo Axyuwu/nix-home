@@ -1,6 +1,6 @@
 # Requires jetbrains mono to be installed if the terminal_open value isn't set
 {
-  pkgs ? import <nixpkgs> { },
+  pkgs,
   title ? "Quickselect",
   # function returning a shell script derivation that, given a title and a binary file, opens that binary file with that title inside a terminal
   terminal_open ? { title, quickselect_bin }: let 

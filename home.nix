@@ -9,7 +9,7 @@ let
   fish = pkg_exec "fish";
   kitty = pkg_exec "kitty";
   terminal = kitty;
-  quickselect = import ./quickselect.nix {};
+  quickselect = import ./quickselect.nix { inherit pkgs; };
   nvim = pkg_bin "neovim" "nvim";
   firefox = pkg_exec "firefox";
   discord = pkg_exec "vesktop";
