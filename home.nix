@@ -177,6 +177,8 @@ in {
     home-manager.enable = true;
     git = {
       enable = true;
+      userName = "Axy";
+      userEmail = "gilliardmarthey.axel@gmail.com";
     };
     fish = {
       enable = true;
