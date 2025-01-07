@@ -9,7 +9,8 @@ let
     extraPkgs = p: ([ p.jetbrains-mono ]);
   };
   kitty = pkg_exec "kitty";
-  nvim = pkg_bin "neovim" "nvim";
+  nvim_pkg = pkgs.neovim-unwrapped;
+  nvim = "${nvim_pkg}/bin/nvim";
   firefox = pkg_exec "firefox";
   discord = pkg_exec "vesktop";
   prism_launcher = pkg_exec "prismlauncher";
@@ -82,6 +83,10 @@ in {
     };
     fish = {
       enable = true;
+    };
+    nixvim = {
+      enable = true;
+      package = nvim_pkg;
     };
     kitty = {
       enable = true;
