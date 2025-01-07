@@ -63,6 +63,10 @@ in {
     };
     neovim = {
       enable = true;
+      defaultEditor = true;
+      plugins = with pkgs.vimPlugins; [
+        nvim-treesitter.withAllGrammars
+      ];
     };
     kitty = {
       enable = true;
