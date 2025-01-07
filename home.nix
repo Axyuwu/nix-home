@@ -8,6 +8,11 @@ let
   steam = pkgs.steam.override {
     extraPkgs = p: ([ p.jetbrains-mono ]);
   };
+  kitty = pkg_exec "kitty";
+  nvim = pkg_bin "neovim" "nvim";
+  firefox = pkg_exec "firefox";
+  discord = pkg_exec "vesktop";
+  prism_launcher = pkg_exec "prismlauncher";
 in {
   home.username = profile_name;
   home.homeDirectory = "/home/${profile_name}";
@@ -21,6 +26,23 @@ in {
   imports = [ 
     ./sway.nix
   ];
+
+  sway = {
+    enable = true;
+    quickselect_config = {
+      "Kitty" = pkg_exec kitty;
+      "Steam" = "steam";
+      "Neovim" = "${kitty} ${nvim}";
+      "Firefox" = firefox;
+      "Discord" = discord;
+      "Prism Launcher" = prism_launcher;
+    };
+    startup = [
+      firefox
+      discord
+    ];
+    terminal = kitty;
+  };
 
   home.packages = (with pkgs; [
     wl-clipboard
@@ -60,13 +82,6 @@ in {
     };
     fish = {
       enable = true;
-    };
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-      plugins = with pkgs.vimPlugins; [
-        nvim-treesitter.withAllGrammars
-      ];
     };
     kitty = {
       enable = true;
