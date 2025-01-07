@@ -30,7 +30,7 @@ in {
   sway = {
     enable = true;
     quickselect_config = {
-      "Kitty" = pkg_exec kitty;
+      "Kitty" = kitty;
       "Steam" = "steam";
       "Neovim" = "${kitty} ${nvim}";
       "Firefox" = firefox;

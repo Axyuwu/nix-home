@@ -6,11 +6,11 @@ let
   pkg_exec = pkg: pkg_bin pkg pkg;
   quickselect = import ./quickselect.nix { inherit pkgs; };
   run_bg = program: pkgs.writeShellScript "run_background" "${pkg_bin "swayfx" "swaymsg"} exec ${program}";
-  quickselect_config = quickselect.mkconfig (lib.attrsets.mapAttrs _name: value: run_bg value);
+  quickselect_config = quickselect.mkconfig (lib.attrsets.mapAttrs (_name: value: run_bg value) cfg.quickselect_config);
 in {
   options.sway = with lib; {
     enable = mkEnableOption "Sway module";
-    quickselect_config = mkOption  {
+    quickselect_config = mkOption {
       type = types.attrsOf types.str;
       description = "Attribute set defininig quickselect options for the keybind";
       default = {};
@@ -21,8 +21,8 @@ in {
       default = [];
     };
     terminal = mkOption {
-      type = types.str;
-      description "Terminal used"
+      type = types.path;
+      description = "Terminal used";
     };
   }; 
   config = lib.mkIf cfg.enable { 
@@ -32,17 +32,16 @@ in {
       down = "j";
       up = "k";
       right = "l";
-      terminal_open = arg: "exec ${terminal} ${arg}";
       modifier = "Mod4";
     in {
       enable = true;
       systemd.enable = true;
       config = {
         modifier = modifier;
-        terminal = terminal;
+        terminal = "${cfg.terminal}";
         startup = [
           { command = "${pkg_bin "kanshi" "kanshictl"} reload"; always = true; }
-        ] ++ cfg.startup;
+        ] ++ (builtins.map (e: { command = e; }) cfg.startup);
         input = { 
           "type:keyboard" = {
             xkb_layout = "fr";
