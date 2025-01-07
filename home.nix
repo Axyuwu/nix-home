@@ -6,7 +6,7 @@ let
   pkg_exec = pkg: pkg_bin pkg pkg;
   quickselect = import ./quickselect.nix { inherit pkgs; };
   steam = pkgs.steam.override {
-    extraPkgs = p: ([ p.jetbrains-mono ]);
+  extraPkgs = p: ([ p.jetbrains-mono ]);
   };
   kitty = pkg_exec "kitty";
   nvim_pkg = pkgs.neovim-unwrapped;
@@ -14,6 +14,8 @@ let
   firefox = pkg_exec "firefox";
   discord = pkg_exec "vesktop";
   prism_launcher = pkg_exec "prismlauncher";
+  rustc = pkgs.rustc;
+  cargo = pkgs.cargo;
 in {
   home.username = profile_name;
   home.homeDirectory = "/home/${profile_name}";
@@ -50,8 +52,6 @@ in {
     slurp
     grim
     vesktop
-    rustc
-    cargo
     neofetch
     htop
     zip
@@ -62,7 +62,7 @@ in {
     jetbrains-mono
     xdg-utils
     prismlauncher
-  ]) ++ [ steam steam.run quickselect.pkg ];
+  ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg)[
@@ -87,6 +87,25 @@ in {
     nixvim = {
       enable = true;
       package = nvim_pkg;
+      colorschemes.catppuccin.enable = true;
+      plugins = {
+        bufferline.enable = true;
+	web-devicons.enable = true;
+        treesitter = {
+	  enable = true;
+	  settings.syntax_highlight.enable = true;
+	};
+	lsp = {
+          enable = true;
+	  servers = {
+            nixd.enable = true;
+	    rust_analyzer = { enable = true; cargoPackage = cargo; installCargo = true; rustcPackage = rustc; installRustc = true;};
+	  };
+	};
+	lualine = {
+          enable = true;
+	};
+      };
     };
     kitty = {
       enable = true;
