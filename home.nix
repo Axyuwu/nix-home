@@ -15,7 +15,7 @@ in {
   home.stateVersion = "24.11";
 
   home.sessionVariables = {
-    DEFAULT_BROWSER = firefox;
+    DEFAULT_BROWSER = pkg_exec "firefox";
   };
 
   imports = [ 

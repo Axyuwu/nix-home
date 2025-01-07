@@ -3,6 +3,7 @@
 let 
   profile_name = "axy";
   pkg_bin = pkg: file: "${pkgs.${pkg}}/bin/${file}";
+  pkg_exec = pkg: pkg_bin pkg pkg;
   kitty = pkg_exec "kitty";
   terminal = kitty;
   quickselect = import ./quickselect.nix { inherit pkgs; };
@@ -62,7 +63,7 @@ in {
         "${modifier}+Shift+i" = "exec ${terminal}";
         "${modifier}+x" = "kill";
         "${modifier}+s" = "layout toggle split";
-        "${modifier}+Shift+s" = "exec ${pkg_exec "slurp"} | ${pkg_exec "grim"} -g - - | ${copy}";
+        "${modifier}+Shift+s" = "exec ${pkg_exec "slurp"} | ${pkg_exec "grim"} -g - - | ${pkg_bin "wl-clipboard" "wl-copy"}";
         "${modifier}+b" = "layout split horizontal";
         "${modifier}+v" = "layout split vertical";
         "${modifier}+Shift+q" = "exec swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' 'swaymsg exit'";
