@@ -5,10 +5,11 @@
   ... 
 }:
 
-let cfg = config.nvim;
-{
+let
+  cfg = config.nvim;
+in {
   options.nvim = with lib; {
-    enable = mkEnableOption;
+    enable = mkEnableOption "Neovim module";
     package = mkOption {
       type = types.package;
       default = pkgs.neovim-unwrapped;

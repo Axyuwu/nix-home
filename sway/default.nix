@@ -4,7 +4,7 @@ let
   cfg = config.sway;
   pkg_bin = pkg: file: "${pkgs.${pkg}}/bin/${file}";
   pkg_exec = pkg: pkg_bin pkg pkg;
-  quickselect = import ./quickselect.nix { inherit pkgs; };
+  quickselect = import ../quickselect.nix { inherit pkgs; };
   run_bg = program: pkgs.writeShellScript "run_background" "${pkg_bin "swayfx" "swaymsg"} exec ${program}";
   quickselect_config = quickselect.mkconfig (lib.attrsets.mapAttrs (_name: value: run_bg value) cfg.quickselect_config);
 in {

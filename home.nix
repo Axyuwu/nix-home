@@ -27,7 +27,7 @@ in {
   };
 
   imports = [ 
-    ./sway.nix
+    ./sway
     ./nvim
   ];
 
