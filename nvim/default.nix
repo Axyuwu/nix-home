@@ -37,7 +37,7 @@ in {
       vim.opt.splitbelow = true
       vim.opt.inccommand = 'split'
       vim.opt.cursorline = true
-      vim.opt.scrolloff = 20
+      vim.opt.scrolloff = 10
     '';
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig

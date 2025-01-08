@@ -75,10 +75,36 @@ in {
       	  "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
         };
         modes = {};
+	colors = lib.attrsets.mapAttrs 
+        (_: value: 
+          ({
+	    border = "$overlay0";
+            background = "$base"; 
+            text = "$text";
+	    indicator = "$rosewater";
+	    childBorder = "$overlay0";
+          } // value)
+        )
+        {
+          focused = { 
+	    border = "$lavender"; 
+	    childBorder = "$lavender";
+	  };
+	  focusedInactive = {};
+	  unfocused = {};
+	  urgent = {
+            border = "$peach";
+	    text = "$peach";
+	    indicator = "$overlay0";
+	    childBorder = "$peach";
+	  };
+	  placeholder = {
+            indicator = "$overlay0";
+	  };
+        } // { background = "$base"; };
+        floating.criteria = [{ "title" = quickselect.title; }];
       };
-
       extraConfig = ''
-        for_window [title = ${quickselect.title}] floating enable
         default_dim_inactive 0.2
       '';
       package = pkgs.swayfx;
