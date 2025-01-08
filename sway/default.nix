@@ -105,7 +105,7 @@ in {
         floating.criteria = [{ "title" = quickselect.title; }];
       };
       extraConfig = ''
-        default_dim_inactive 0.2
+        default_dim_inactive 0.1
       '';
       package = pkgs.swayfx;
       checkConfig = false;
