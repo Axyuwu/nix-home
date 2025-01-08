@@ -6,7 +6,7 @@ let
   pkg_exec = pkg: pkg_bin pkg pkg;
   quickselect = import ./quickselect.nix { inherit pkgs; };
   steam = pkgs.steam.override {
-  extraPkgs = p: ([ p.jetbrains-mono ]);
+    extraPkgs = p: [ p.jetbrains-mono ];
   };
   kitty = pkg_exec "kitty";
   nvim_pkg = pkgs.neovim-unwrapped;
@@ -28,6 +28,7 @@ in {
 
   imports = [ 
     ./sway.nix
+    ./nvim
   ];
 
   sway = {
@@ -45,6 +46,11 @@ in {
       discord
     ];
     terminal = kitty;
+  };
+
+  nvim = {
+    enable = true;
+    package = nvim_pkg;
   };
 
   home.packages = (with pkgs; [
@@ -83,31 +89,7 @@ in {
     };
     fish = {
       enable = true;
-    };
-    nixvim = {
-      enable = true;
-      package = nvim_pkg;
-      colorschemes.catppuccin.enable = true;
-      plugins = {
-        bufferline.enable = true;
-	web-devicons.enable = true;
-        treesitter = {
-	  enable = true;
-	  settings.syntax_highlight.enable = true;
-	};
-	lsp = {
-          enable = true;
-	  servers = {
-            nixd.enable = true;
-	    rust_analyzer = { enable = true; cargoPackage = cargo; installCargo = true; rustcPackage = rustc; installRustc = true;};
-	  };
-	};
-	lualine = {
-          enable = true;
-	};
-      };
-    };
-    kitty = {
+    };    kitty = {
       enable = true;
       shellIntegration.enableFishIntegration = true;
       font = {
