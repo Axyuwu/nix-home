@@ -41,6 +41,7 @@ in {
         terminal = "${cfg.terminal}";
         startup = [
           { command = "${pkg_bin "kanshi" "kanshictl"} reload"; always = true; }
+	  { command = "${pkg_exec "swaybg"} -i ${ ./wallpapers/rainbow-cat.png }"; always = true; }
         ] ++ (builtins.map (e: { command = e; }) cfg.startup);
         input = { 
           "type:keyboard" = {

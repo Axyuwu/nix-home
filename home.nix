@@ -19,7 +19,6 @@ let
 in {
   home.username = profile_name;
   home.homeDirectory = "/home/${profile_name}";
-
   home.stateVersion = "24.11";
 
   home.sessionVariables = {
@@ -30,6 +29,11 @@ in {
     ./sway
     ./nvim
   ];
+
+  catppuccin = {
+    enable = true;
+    flavor = "macchiato";
+  };
 
   sway = {
     enable = true;
@@ -68,6 +72,7 @@ in {
     jetbrains-mono
     xdg-utils
     prismlauncher
+    pkgs.swaybg
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {

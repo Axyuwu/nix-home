@@ -16,9 +16,10 @@ in {
       description = "What neovim package to use";
     };
   };
-  config = lib.mkIf cfg.enable ({
-    home.packages = [ cfg.package ];
-    home.file.".config/nvim/init.lua".source = pkgs.writeText "neovim_init_file" (''
+  config.programs.neovim = lib.mkIf cfg.enable ({
+    enable = true;
+    package = cfg.package;
+    extraLuaConfig = ''
       vim.g.mapleader = ' '
       vim.g.maplocalleader = ' '
       vim.g.have_nerd_font = true
@@ -37,6 +38,11 @@ in {
       vim.opt.inccommand = 'split'
       vim.opt.cursorline = true
       vim.opt.scrolloff = 20
-    '');
+    '';
+    plugins = with pkgs.vimPlugins; [
+      nvim-lspconfig
+      nvim-treesitter.withAllGrammars
+      mini-nvim
+    ];
   });
 }
