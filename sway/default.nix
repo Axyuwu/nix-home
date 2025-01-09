@@ -115,7 +115,7 @@ in {
       enable = true;
       settings = [
         {
-          profile.name = "integrated_graphics";
+          profile.name = "main_pc_3_monitors";
           profile.outputs = let 
 	    monitor_to_pos = arg: "${builtins.toString arg.pos.x},${builtins.toString arg.pos.y}";
 	    monitor_to_mode = arg: fps: "${builtins.toString arg.dim.x}x${builtins.toString arg.dim.y}@${builtins.toString fps}Hz";
@@ -139,17 +139,32 @@ in {
 	        y = monitor_1.pos.y + monitor_1.dim.y - dim.y;
 	      };
 	    };
+	    monitor_3 = rec {
+              dim = {
+                x = 1920;
+		y = 1080;
+	      };
+	      pos = {
+	        x = monitor_1.pos.x - dim.x;
+                y = monitor_1.pos.y + monitor_1.dim.y - dim.y;
+	      };
+	    };
 	  in [
             {
-	      criteria = "DP-2";
+	      criteria = "Samsung Electric Company LC32G5xT HNATA00141";
 	      adaptiveSync = true;
 	      mode = monitor_to_mode monitor_1 144;
 	      position = monitor_to_pos monitor_1;
 	    }
             {
-	      criteria = "HDMI-A-1";
+	      criteria = "AOC 2400W LZMI3JA000258";
 	      mode = monitor_to_mode monitor_2 60;
 	      position = monitor_to_pos monitor_2;
+	    }
+	    {
+              criteria = "AOC 24B2W1 0x00001A5F";
+	      mode = monitor_to_mode monitor_3 60;
+              position = monitor_to_pos monitor_3;
 	    }
 	  ];
         }
