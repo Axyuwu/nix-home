@@ -121,18 +121,18 @@ in {
 	    monitor_to_mode = arg: fps: "${builtins.toString arg.dim.x}x${builtins.toString arg.dim.y}@${builtins.toString fps}Hz";
             monitor_1 = { 
 	      dim = { 
-	        x = 2560; 
-	        y = 1440; 
+	        x = 1920; 
+	        y = 1080; 
 	      }; 
 	      pos = {
 	        x = 0;
-	        y = 0;
+	        y = 1440;
 	      };
 	    };
 	    monitor_2 = rec {
 	      dim = { 
-	        x = 1920; 
-	        y = 1080; 
+	        x = 2560; 
+	        y = 1440; 
 	      }; 
 	      pos = {
 	        x = monitor_1.pos.x + monitor_1.dim.x;
@@ -145,26 +145,26 @@ in {
 		y = 1080;
 	      };
 	      pos = {
-	        x = monitor_1.pos.x - dim.x;
-                y = monitor_1.pos.y + monitor_1.dim.y - dim.y;
+	        x = monitor_2.pos.x + monitor_2.dim.x;
+                y = monitor_2.pos.y + monitor_2.dim.y - dim.y;
 	      };
 	    };
 	  in [
+	    {
+              criteria = "AOC 24B2W1 0x00001A5F";
+	      mode = monitor_to_mode monitor_1 60;
+              position = monitor_to_pos monitor_1;
+	    }
             {
 	      criteria = "Samsung Electric Company LC32G5xT HNATA00141";
 	      adaptiveSync = true;
-	      mode = monitor_to_mode monitor_1 144;
-	      position = monitor_to_pos monitor_1;
+	      mode = monitor_to_mode monitor_2 144;
+	      position = monitor_to_pos monitor_2;
 	    }
             {
 	      criteria = "AOC 2400W LZMI3JA000258";
-	      mode = monitor_to_mode monitor_2 60;
-	      position = monitor_to_pos monitor_2;
-	    }
-	    {
-              criteria = "AOC 24B2W1 0x00001A5F";
 	      mode = monitor_to_mode monitor_3 60;
-              position = monitor_to_pos monitor_3;
+	      position = monitor_to_pos monitor_3;
 	    }
 	  ];
         }
