@@ -3,21 +3,15 @@
   pkgs,
   title ? "Quickselect",
   # function returning a shell script derivation that, given a title and a binary file, opens that binary file with that title inside a terminal
-  terminal_open ? { title, quickselect_bin }: let 
-    term_config = builtins.toFile "quickselect_kitty_term_config" ''
-      font_family jetbrains mono
-      font_size 12
-
-      remember_window_size no
-      initial_window_width 56c
-      initial_window_height 16c
-    '';
-  in pkgs.writeShellScript "terminal_open" ''
-    ${pkgs.kitty}/bin/kitty \
-    --title "${title}" \
-    --config ${term_config} \
-    ${quickselect_bin} "$1"
-  '',
+  terminal_open ? { title, quickselect_bin }: 
+    pkgs.writeShellScript "terminal_open" ''
+      ${pkgs.kitty}/bin/kitty \
+      --title "${title}" \
+      -o remember_window_size=no \
+      -o initial_window_width=56c \
+      -o initial_window_height=16c \
+      ${quickselect_bin} "$1"
+    '',
 }:
 
 rec {
@@ -43,5 +37,4 @@ rec {
     );
   inherit title;
 }
-
 

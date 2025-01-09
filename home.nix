@@ -66,13 +66,12 @@ in {
     htop
     zip
     unzip
-    fzf
     wev
     playerctl
     jetbrains-mono
     xdg-utils
     prismlauncher
-    pkgs.swaybg
+    swaybg
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
@@ -92,9 +91,9 @@ in {
       userName = "Axy";
       userEmail = "gilliardmarthey.axel@gmail.com";
     };
-    fish = {
-      enable = true;
-    };    kitty = {
+    fzf.enable = true;
+    fish.enable = true;
+    kitty = {
       enable = true;
       shellIntegration.enableFishIntegration = true;
       font = {
