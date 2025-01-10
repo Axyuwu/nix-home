@@ -93,6 +93,8 @@ in {
     };
     fzf.enable = true;
     fish.enable = true;
+    bash.enable = true;
+    zsh.enable = true;
     kitty = {
       enable = true;
       shellIntegration.enableFishIntegration = true;
