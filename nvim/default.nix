@@ -20,7 +20,7 @@ in {
     enable = true;
     package = cfg.package;
     extraLuaConfig = ''
-      vim.keymap.set('n', ' ', '<Nop>')
+      vim.keymap.del('n', ' ')
       vim.g.mapleader = ' '
       vim.g.maplocalleader = ' '
       vim.g.have_nerd_font = true
