@@ -20,7 +20,7 @@ in {
     enable = true;
     package = cfg.package;
     extraLuaConfig = ''
-      vim.keymap.del('n', ' ')
+      vim.keymap.set('n', ' ', '<Nop>')
       vim.g.mapleader = ' '
       vim.g.maplocalleader = ' '
       vim.g.have_nerd_font = true
@@ -42,6 +42,10 @@ in {
 
       require 'nvim-treesitter.configs'.setup {}
 
+      wk = require 'which-key'
+      wk.setup {}
+      wk.add({ {"<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)"} })
+
       local lspconfig = require 'lspconfig'
       lspconfig.nixd.setup {}
     '';
@@ -49,6 +53,7 @@ in {
       nvim-lspconfig
       nvim-treesitter.withAllGrammars
       mini-nvim
+      which-key-nvim
     ];
   };
   config.home.packages = with pkgs; [ nixd ];
