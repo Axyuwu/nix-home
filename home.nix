@@ -8,12 +8,6 @@ let
   steam = pkgs.steam.override {
     extraPkgs = p: [ p.jetbrains-mono ];
   };
-  kitty = pkg_exec "kitty";
-  nvim_pkg = pkgs.neovim-unwrapped;
-  nvim = "${nvim_pkg}/bin/nvim";
-  firefox = pkg_exec "firefox";
-  discord = pkg_exec "vesktop";
-  prism_launcher = pkg_exec "prismlauncher";
   rustc = pkgs.rustc;
   cargo = pkgs.cargo;
 in {
@@ -38,23 +32,22 @@ in {
   sway = {
     enable = true;
     quickselect_config = {
-      "Kitty" = kitty;
+      "Kitty" = "kitty";
       "Steam" = "steam";
-      "Neovim" = "${kitty} ${nvim}";
-      "Firefox" = firefox;
-      "Discord" = discord;
-      "Prism Launcher" = prism_launcher;
+      "Neovim" = "kitty nvim";
+      "Firefox" = "firefox";
+      "Discord" = "vesktop";
+      "Prism Launcher" = "prismlauncher";
     };
     startup = [
-      firefox
-      discord
+      "firefox"
+      "vesktop"
     ];
-    terminal = kitty;
+    terminal = "kitty";
   };
 
   nvim = {
     enable = true;
-    package = nvim_pkg;
   };
 
   home.packages = (with pkgs; [

@@ -1,5 +1,6 @@
 { config, pkgs, lib, ... }: 
 
+
 let 
   cfg = config.sway;
   pkg_bin = pkg: file: "${pkgs.${pkg}}/bin/${file}";
@@ -21,7 +22,7 @@ in {
       default = [];
     };
     terminal = mkOption {
-      type = types.path;
+      type = types.str;
       description = "Terminal used";
     };
   }; 
