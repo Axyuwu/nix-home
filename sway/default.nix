@@ -109,7 +109,7 @@ in {
 	    border = "$overlay0";
             background = "$base"; 
             text = "$text";
-	    indicator = "$rosewater";
+	    indicator = "$overlay0";
 	    childBorder = "$overlay0";
           } // value)
         )
@@ -117,18 +117,17 @@ in {
           focused = { 
 	    border = "$lavender"; 
 	    childBorder = "$lavender";
+	    indicator = "$lavender";
 	  };
 	  focusedInactive = {};
 	  unfocused = {};
 	  urgent = {
             border = "$peach";
 	    text = "$peach";
-	    indicator = "$overlay0";
+	    indicator = "$peach";
 	    childBorder = "$peach";
 	  };
-	  placeholder = {
-            indicator = "$overlay0";
-	  };
+	  placeholder = {};
         } // { background = "$base"; };
         floating.criteria = [{ "title" = quickselect.title; }];
       };
