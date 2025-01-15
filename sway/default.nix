@@ -67,10 +67,9 @@ in {
           "${modifier}+i" = "exec ${quickselect.bin} ${quickselect_config}";
           "${modifier}+Shift+i" = "exec ${cfg.terminal}";
           "${modifier}+x" = "kill";
-          "${modifier}+s" = "layout toggle split";
           "${modifier}+Shift+s" = "exec ${pkg_exec "slurp"} | ${pkg_exec "grim"} -g - - | ${pkg_bin "wl-clipboard" "wl-copy"}";
-          "${modifier}+b" = "layout split horizontal";
-          "${modifier}+v" = "layout split vertical";
+          "${modifier}+s" = "split toggle";
+          "${modifier}+d" = "focus parent";
           "${modifier}+Shift+q" = "exec swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' 'swaymsg exit'";
           "${modifier}+Shift+r" = "reload";
       	  "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
