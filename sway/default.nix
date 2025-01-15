@@ -96,10 +96,10 @@ in {
 	    focusedStatusline = "$text";
 	    separator = "$base";
 	    focusedSeparator = "$base";
-	    focusedWorkspace = mkTarget "$mauve" "$crust";
-	    activeWorkspace = mkTarget "$surface2" "$text";
+	    focusedWorkspace = mkTarget "$lavender" "$crust";
+	    activeWorkspace = mkTarget "$overlay0" "$text";
 	    inactiveWorkspace = mkTarget "$base" "$text";
-	    urgentWorkspace = mkTarget "$red" "$crust";
+	    urgentWorkspace = mkTarget "$peach" "$crust";
           };
 	}];
 
