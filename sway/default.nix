@@ -75,6 +75,34 @@ in {
           "${modifier}+Shift+r" = "reload";
       	  "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
         };
+
+        bars = [{
+	  mode = "dock";
+	  hiddenState = "hide";
+	  position = "bottom";
+	  workspaceButtons = true;
+	  workspaceNumbers = true;
+	  statusCommand = "${pkgs.i3status}/bin/i3status";
+	  fonts = {
+	    names = [ "monospace" ];
+	    size = 8.0;
+	  };
+	  trayOutput = "primary";
+	  colors = let
+	    mkTarget = background: text: { inherit background text; border = "$base"; };
+          in {
+	    background = "$base";
+	    statusline = "$text";
+	    focusedStatusline = "$text";
+	    separator = "$base";
+	    focusedSeparator = "$base";
+	    focusedWorkspace = mkTarget "$mauve" "$crust";
+	    activeWorkspace = mkTarget "$surface2" "$text";
+	    inactiveWorkspace = mkTarget "$base" "$text";
+	    urgentWorkspace = mkTarget "$red" "$crust";
+          };
+	}];
+
         modes = {};
 	colors = lib.attrsets.mapAttrs 
         (_: value: 
@@ -105,6 +133,7 @@ in {
         } // { background = "$base"; };
         floating.criteria = [{ "title" = quickselect.title; }];
       };
+
       extraConfig = ''
         default_dim_inactive 0.1
       '';
