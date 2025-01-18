@@ -66,6 +66,7 @@ in {
     prismlauncher
     swaybg
     nexusmods-app
+    tmux
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
