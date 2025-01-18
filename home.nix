@@ -65,6 +65,7 @@ in {
     xdg-utils
     prismlauncher
     swaybg
+    nexus-mod-app
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
