@@ -81,10 +81,9 @@ in {
 	  position = "bottom";
 	  workspaceButtons = true;
 	  workspaceNumbers = true;
-	  statusCommand = "${pkgs.i3status}/bin/i3status";
 	  fonts = {
-	    names = [ "monospace" ];
-	    size = 8.0;
+	    names = [ "jetbrains mono" ];
+	    size = 9.0;
 	  };
 	  trayOutput = "primary";
 	  colors = let
@@ -100,6 +99,21 @@ in {
 	    inactiveWorkspace = mkTarget "$base" "$text";
 	    urgentWorkspace = mkTarget "$peach" "$crust";
           };
+          statusCommand = let 
+	    config = pkgs.writeText "i3status_config" ''
+	      general {
+	        colors = true
+		interval = 1
+		separator = " | "
+	      }
+
+	      order += "time"
+
+	      time {
+                format = "%A %Y-%m-%d %H:%M:%S"
+	      }
+	    '';
+	  in "${pkgs.i3status}/bin/i3status -c ${config}";
 	}];
 
         modes = {};
