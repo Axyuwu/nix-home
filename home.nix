@@ -66,6 +66,7 @@ in {
     prismlauncher
     swaybg
     protontricks
+    unp
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
