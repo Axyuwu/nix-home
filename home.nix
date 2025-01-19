@@ -65,6 +65,7 @@ in {
     xdg-utils
     prismlauncher
     swaybg
+    protontricks
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
@@ -85,20 +86,21 @@ in {
       userEmail = "gilliardmarthey.axel@gmail.com";
     };
     fzf.enable = true;
+    fish.enable = true;
     bash.enable = true;
     tmux = {
       enable = true;
     };
     kitty = {
       enable = true;
-      shellIntegration.enableBashIntegration = true;
+      shellIntegration.enableFishIntegration = true;
       font = {
         name = "jetbrains mono";
 	package = pkgs.jetbrains-mono;
 	size = 12;
       };
       settings = {
-        shell = "bash";
+        shell = "fish";
       };
     };
     firefox = {
