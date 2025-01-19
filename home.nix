@@ -67,7 +67,7 @@ in {
     swaybg
     protontricks
     unp
-    unrar
+    unrar-free
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
