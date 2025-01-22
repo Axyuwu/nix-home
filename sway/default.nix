@@ -194,7 +194,7 @@ in {
 	  in [
 	    {
               criteria = "AOC 24B2W1 0x00001A5F";
-	      mode = monitor_to_mode monitor_1 60;
+	      mode = monitor_to_mode monitor_1 "74.973";
               position = monitor_to_pos monitor_1;
 	    }
             {
