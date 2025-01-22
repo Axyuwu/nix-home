@@ -111,9 +111,6 @@ in {
       profiles.${profile_name} = {
         isDefault = true;
       };
-      nativeMessagingHosts = [
-        pkgs.tridactyl-native
-      ];
     };
   };
 }
