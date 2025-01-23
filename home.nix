@@ -4,12 +4,9 @@ let
   profile_name = "axy";
   pkg_bin = pkg: file: "${pkgs.${pkg}}/bin/${file}";
   pkg_exec = pkg: pkg_bin pkg pkg;
-  quickselect = import ./quickselect.nix { inherit pkgs; };
   steam = pkgs.steam.override {
     extraPkgs = p: [ p.jetbrains-mono ];
   };
-  rustc = pkgs.rustc;
-  cargo = pkgs.cargo;
 in {
   home.username = profile_name;
   home.homeDirectory = "/home/${profile_name}";
@@ -70,7 +67,10 @@ in {
     unrar-free
     p7zip
     pamixer
-  ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
+    rustc
+    cargo
+    gcc
+  ]) ++ [ steam steam.run ];
 
   nixpkgs.config = {
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg)[
