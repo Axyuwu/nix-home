@@ -114,6 +114,8 @@ in {
 
 	  echo -n "> "
 	'';
+	fish_greeting = ''
+	'';
       };
     }; 
     bash.enable = true;
