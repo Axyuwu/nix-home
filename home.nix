@@ -69,6 +69,7 @@ in {
     unp
     unrar-free
     p7zip
+    pamixer
   ]) ++ [ steam steam.run quickselect.pkg rustc cargo ];
 
   nixpkgs.config = {
