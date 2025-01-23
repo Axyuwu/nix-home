@@ -90,7 +90,13 @@ in {
       userEmail = "gilliardmarthey.axel@gmail.com";
     };
     fzf.enable = true;
-    fish.enable = true;
+    fish = {
+      enable = true;
+      shellAliases = {
+        dev = "nix develop -c fish";
+	build = "nix build";
+      };
+    }; 
     bash.enable = true;
     tmux = {
       enable = true;
