@@ -48,6 +48,7 @@ in {
 
       local lspconfig = require 'lspconfig'
       lspconfig.nixd.setup {}
+      lspconfig.rust_analyzer.setup {}
     '';
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig
@@ -56,5 +57,5 @@ in {
       which-key-nvim
     ];
   };
-  config.home.packages = with pkgs; [ nixd ];
+  config.home.packages = with pkgs; [ nixd rust-analyzer ];
 }
