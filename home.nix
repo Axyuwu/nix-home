@@ -96,6 +96,33 @@ in {
         dev = "nix develop -c fish";
 	build = "nix build";
       };
+      functions.fish_prompt = ''
+	  set -l pretty_path (
+	    pwd | sed -E 's|^'$HOME'|~|;s|(.*)/|\1%|;s|((^\|/)\.?[^/%]{1})[^/%]*|\1|g;s|(.*)%|\1/|'
+	  )
+
+          set_color green
+	  echo -n "$USER"
+
+	  set_color normal
+	  echo -n "@"
+
+	  set_color blue
+	  echo -n "$hostname "
+
+	  set_color cyan
+	  if test -n "$IN_NIX_SHELL"
+	    echo -n "<nix> "
+	  end
+
+	  set_color yellow
+	  echo -n "$pretty_path"
+
+	  set_color normal
+	  echo -n "$(fish_git_prompt)"
+
+	  echo -n "> "
+	'';
     }; 
     bash.enable = true;
     tmux = {
