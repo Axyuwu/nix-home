@@ -98,12 +98,11 @@ in {
       };
       functions = {
         fish_prompt = ''
-	  echo -n (prompt_login)
-	  echo -n " "
+	  echo -n  -s (prompt_login) " "
 
 	  set_color cyan
 	  if test -n "$IN_NIX_SHELL"
-	    echo -n "<nix>"
+	    echo -n "<nix> "
 	  end
 
 	  set_color yellow 
