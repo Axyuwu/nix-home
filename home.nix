@@ -103,7 +103,7 @@ in {
 
 	  set_color cyan
 	  if test -n "$IN_NIX_SHELL"
-	    echo -n "<nix> "
+	    echo -n "<nix>"
 	  end
 
 	  set_color yellow 

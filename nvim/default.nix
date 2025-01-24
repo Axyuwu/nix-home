@@ -42,9 +42,25 @@ in {
 
       require 'nvim-treesitter.configs'.setup {}
 
-      wk = require 'which-key'
+      local fzf = require 'fzf-lua'
+      fzf.setup {}
+
+      local wk = require 'which-key'
       wk.setup {}
-      wk.add({ {"<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)"} })
+      wk.add({ 
+        {"<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)"},
+	{
+	  {"<leader>w", "<cmd>w<cr>", desc = "Write"},
+	},
+	{
+	  {"gd", function() vim.lsp.buf.definition() end, desc = "Jump to definition"}
+	},
+	{
+	  {"<leader>l", group = "LSP"},
+          {"<leader>la", function() fzf.lsp_code_actions() end, desc = "Code Action"},
+          {"<leader>ld", function() fzf.diagnostics_document() end, desc = "Diagnostic"},
+	},
+      })
 
       local lspconfig = require 'lspconfig'
       lspconfig.nixd.setup {}
@@ -53,9 +69,9 @@ in {
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig
       nvim-treesitter.withAllGrammars
-      mini-nvim
       which-key-nvim
+      fzf-lua
     ];
   };
-  config.home.packages = with pkgs; [ nixd rust-analyzer ];
+  config.home.packages = with pkgs; [ nixd rust-analyzer fzf ];
 }
