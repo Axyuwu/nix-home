@@ -44,6 +44,7 @@ in {
 
       local fzf = require 'fzf-lua'
       fzf.setup {}
+      fzf.register_ui_select()
 
       local wk = require 'which-key'
       wk.setup {}
@@ -53,12 +54,14 @@ in {
 	  {"<leader>w", "<cmd>w<cr>", desc = "Write"},
 	},
 	{
-	  {"gd", function() vim.lsp.buf.definition() end, desc = "Jump to definition"}
+	  {"gd", function() vim.lsp.buf.definition() end, desc = "Jump to definition"},
+	  {"<leader>d", function() vim.diagnostic.open_float(nil, {focus=true, scope = "cursor"}) end, desc = "Hover diagnostics"},
 	},
 	{
 	  {"<leader>l", group = "LSP"},
-          {"<leader>la", function() fzf.lsp_code_actions() end, desc = "Code Action"},
-          {"<leader>ld", function() fzf.diagnostics_document() end, desc = "Diagnostic"},
+          {"<leader>la", function() vim.lsp.buf.code_action() end, desc = "Code Action"},
+          {"<leader>lq", function() vim.lsp.buf.code_action {only = {"quickfix"}} end, desc = "Quick Fix"},
+          {"<leader>lr", function() vim.lsp.buf.rename() end, desc = "Rename Symbol"},
 	},
       })
 
