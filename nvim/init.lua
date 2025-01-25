@@ -69,7 +69,7 @@ barbar.setup {}
 wk.add({
     {"<leader>x", "<Cmd>BufferClose<CR>", desc = "Close current buffer"},
     {"<leader>X", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Close all buffers but current or pinned"},
-    {"<leader>b", "<Cmd>BufferPick<CR>", desc = "Buffer pick"}
+    {"<leader>b", "<Cmd>BufferPick<CR>", desc = "Buffer pick"},
 })
 
 local luasnip = require 'luasnip'
