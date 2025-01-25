@@ -74,7 +74,8 @@ lspconfig.lua_ls.setup {
             workspace = {
                 checkThirdParty = false,
                 library = {
-                    vim.env.VIMRUNTIME
+                    vim.env.VIMRUNTIME,
+		    "${3rd}/lub/library"
                 }
             }
         })
