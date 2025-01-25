@@ -32,8 +32,30 @@ local fzf = require 'fzf-lua'
 fzf.setup {}
 fzf.register_ui_select()
 
-local lualine = require 'lualine';
+local lualine = require 'lualine'
 lualine.setup {}
+
+local luasnip = require 'luasnip'
+luasnip.setup {}
+
+local cmp = require 'cmp'
+cmp.setup {
+    snippet = {
+        exapnd = function(args)
+	    luasnip.lsp_expand(args.body)
+	end,
+    },
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    },
+    sources = cmp.config.sources({
+	{ name = 'nvim_lsp' },
+	{ name = 'luasnip' },
+    }, {
+	{ name = 'buffer' },
+    })
+}
 
 local wk = require 'which-key'
 wk.setup {}

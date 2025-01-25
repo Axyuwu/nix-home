@@ -27,6 +27,7 @@ in {
       fzf-lua
       lualine-nvim
       nvim-cmp
+      cmp-nvim-lsp
       barbar-nvim
       nvim-tree-lua
       nvim-web-devicons
