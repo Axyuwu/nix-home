@@ -1,4 +1,6 @@
 vim.keymap.set('n', ' ', '<Nop>')
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
@@ -19,6 +21,27 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.cmdheight = 0;
 
+local wk = require 'which-key'
+wk.setup {}
+
+wk.add({
+    {"<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)"},
+    {
+        {"<leader>w", "<cmd>w<cr>", desc = "Write"},
+    },
+    {
+        {"gd", function() vim.lsp.buf.definition() end, desc = "Jump to definition"},
+	{"<leader>d", function() vim.diagnostic.open_float(nil, {focus=true, scope = "cursor"}) end, desc = "Hover diagnostics"},
+    },
+    {
+        {"<leader>l", group = "LSP"},
+        {"<leader>la", function() vim.lsp.buf.code_action() end, desc = "Code Action"},
+        {"<leader>lq", function() vim.lsp.buf.code_action {only = {"quickfix"}} end, desc = "Quick Fix"},
+        {"<leader>lr", function() vim.lsp.buf.rename() end, desc = "Rename Symbol"},
+    },
+})
+
+
 local ts = require 'nvim-treesitter.configs'
 ts.setup {}
 
@@ -34,6 +57,9 @@ fzf.register_ui_select()
 
 local lualine = require 'lualine'
 lualine.setup {}
+
+local barbar = require 'barbar'
+barbar.setup {}
 
 local luasnip = require 'luasnip'
 luasnip.setup {}
@@ -75,25 +101,6 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     }),
     matching = { disallow_symbol_nonprefix_matching = false }
-})
-
-local wk = require 'which-key'
-wk.setup {}
-wk.add({
-    {"<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)"},
-    {
-        {"<leader>w", "<cmd>w<cr>", desc = "Write"},
-    },
-    {
-        {"gd", function() vim.lsp.buf.definition() end, desc = "Jump to definition"},
-	{"<leader>d", function() vim.diagnostic.open_float(nil, {focus=true, scope = "cursor"}) end, desc = "Hover diagnostics"},
-    },
-    {
-        {"<leader>l", group = "LSP"},
-        {"<leader>la", function() vim.lsp.buf.code_action() end, desc = "Code Action"},
-        {"<leader>lq", function() vim.lsp.buf.code_action {only = {"quickfix"}} end, desc = "Quick Fix"},
-        {"<leader>lr", function() vim.lsp.buf.rename() end, desc = "Rename Symbol"},
-    },
 })
 
 local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
