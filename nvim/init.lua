@@ -47,15 +47,35 @@ cmp.setup {
     },
     window = {
       completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
     },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    }),
     sources = cmp.config.sources({
 	{ name = 'nvim_lsp' },
 	{ name = 'luasnip' },
     }, {
 	{ name = 'buffer' },
-    })
+    }),
 }
+
+cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        { name = 'cmdline' }
+    }),
+    matching = { disallow_symbol_nonprefix_matching = false }
+})
 
 local wk = require 'which-key'
 wk.setup {}
@@ -76,10 +96,17 @@ wk.add({
     },
 })
 
+local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+
 local lspconfig = require 'lspconfig'
-lspconfig.nixd.setup {}
-lspconfig.rust_analyzer.setup {}
+lspconfig.nixd.setup {
+    capabilities = capabilities,
+}
+lspconfig.rust_analyzer.setup {
+    capabilities = capabilities,
+}
 lspconfig.lua_ls.setup {
+    capabilities = capabilities,
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name
