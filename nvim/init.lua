@@ -19,9 +19,14 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.cmdheight = 0;
 
---vim.cmd("set cmdheight=0")
+local ts = require 'nvim-treesitter.configs'
+ts.setup {}
 
-require 'nvim-treesitter.configs'.setup {}
+local devicons = require 'nvim-web-devicons'
+devicons.setup {
+    color_incons = true,
+    default = true,
+}
 
 local fzf = require 'fzf-lua'
 fzf.setup {}

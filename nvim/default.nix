@@ -26,6 +26,10 @@ in {
       which-key-nvim
       fzf-lua
       lualine-nvim
+      nvim-cmp
+      barbar-nvim
+      nvim-tree-lua
+      nvim-web-devicons
     ];
   };
   config.home.packages = with pkgs; [ nixd rust-analyzer fzf lua-language-server ];
