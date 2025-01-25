@@ -30,6 +30,7 @@ in {
       barbar-nvim
       nvim-tree-lua
       nvim-web-devicons
+      luasnip
     ];
   };
   config.home.packages = with pkgs; [ nixd rust-analyzer fzf lua-language-server ];
