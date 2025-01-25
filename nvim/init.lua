@@ -54,6 +54,12 @@ devicons.setup {
 local fzf = require 'fzf-lua'
 fzf.setup {}
 fzf.register_ui_select()
+wk.add({
+    {"<leader>o", function() fzf.files() end, desc = "Fzf files"},
+    {"<leader>F", function() fzf.blines() end, desc = "Fzf in file"},
+    {"<leader>f", function() fzf.lsp_document_symbols() end, desc = "Fzf lsp buffer symbols"},
+    {"<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols"},
+})
 
 local lualine = require 'lualine'
 lualine.setup {}
