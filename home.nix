@@ -35,6 +35,7 @@ in {
       "Firefox" = "firefox";
       "Discord" = "vesktop";
       "Prism Launcher" = "prismlauncher";
+      "Gimp" = "gimp";
     };
     startup = [
       "firefox"
