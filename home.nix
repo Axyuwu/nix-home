@@ -70,6 +70,7 @@ in {
     rustc
     cargo
     gcc
+    gimp
   ]) ++ [ steam steam.run ];
 
   nixpkgs.config = {
