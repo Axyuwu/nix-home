@@ -75,6 +75,10 @@ in {
       	  "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
         };
 
+	seat = {
+	  "*" = { hide_cursor = "3000"; };
+	};
+
         bars = [{
 	  mode = "dock";
 	  hiddenState = "hide";
