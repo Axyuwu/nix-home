@@ -3,7 +3,8 @@
   pkgs,
   title ? "Quickselect",
   # function returning a shell script derivation that, given a title and a binary file, opens that binary file with that title inside a terminal
-  terminal_open ? { title, quickselect_bin }: 
+  terminal_open ?
+    { title, quickselect_bin }:
     pkgs.writeShellScript "terminal_open" ''
       ${pkgs.kitty}/bin/kitty \
       --title "${title}" \
@@ -15,8 +16,8 @@
 }:
 
 rec {
-  bin = terminal_open { 
-    inherit title; 
+  bin = terminal_open {
+    inherit title;
     quickselect_bin = pkgs.writeShellScript "quickselect" ''
       $("$1"/"$(ls -A "$1" | ${pkgs.fzf}/bin/fzf)")
     '';
@@ -24,17 +25,12 @@ rec {
   pkg = pkgs.writeShellScriptBin "quickselect" ''
     ${bin}
   '';
-  mkconfig = set:
-    pkgs.runCommand "quickselect_mkconfig" {} (
-      pkgs.lib.lists.foldl
-        (a: b: a + b)
-	"mkdir $out \n"
-        (
-	  pkgs.lib.attrsets.mapAttrsToList
-            (name: value: "ln -s \"${value}\" \"$out/${name}\"\n")
-	    set
-        )
+  mkconfig =
+    set:
+    pkgs.runCommand "quickselect_mkconfig" { } (
+      pkgs.lib.lists.foldl (a: b: a + b) "mkdir $out \n" (
+        pkgs.lib.attrsets.mapAttrsToList (name: value: "ln -s \"${value}\" \"$out/${name}\"\n") set
+      )
     );
   inherit title;
 }
-

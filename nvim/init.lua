@@ -19,28 +19,38 @@ vim.opt.splitbelow = true
 vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
-vim.opt.cmdheight = 0;
+vim.opt.cmdheight = 0
+vim.opt.expandtab = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.smarttab = true
 
 local wk = require 'which-key'
 wk.setup {}
 
 wk.add({
-    {"<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)"},
+    { "<leader>?", function() wk.show() end, desc = "Buffer Local Keymaps (which-key)" },
     {
-        {"<leader>w", "<cmd>w<cr>", desc = "Write"},
+        { "<leader>w", "<cmd>w<cr>", desc = "Write" },
     },
     {
-        {"gd", function() vim.lsp.buf.definition() end, desc = "Jump to definition"},
-	{"<leader>d", function() vim.diagnostic.open_float(nil, {focus=true, scope = "cursor"}) end, desc = "Hover diagnostics"},
+        { "gd",        function() vim.lsp.buf.definition() end,                                           desc = "Jump to definition" },
+        { "<leader>d", function() vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" }) end, desc = "Hover diagnostics" },
     },
     {
-        {"<leader>l", group = "LSP"},
-        {"<leader>la", function() vim.lsp.buf.code_action() end, desc = "Code Action"},
-        {"<leader>lq", function() vim.lsp.buf.code_action {only = {"quickfix"}} end, desc = "Quick Fix"},
-        {"<leader>lr", function() vim.lsp.buf.rename() end, desc = "Rename Symbol"},
+        { "<leader>l",  group = "LSP" },
+        { "<leader>la", function() vim.lsp.buf.code_action() end,                         desc = "Code Action" },
+        { "<leader>lq", function() vim.lsp.buf.code_action { only = { "quickfix" } } end, desc = "Quick Fix" },
+        { "<leader>lr", function() vim.lsp.buf.rename() end,                              desc = "Rename Symbol" },
     },
 })
 
+local gitsigns = require 'gitsigns'
+gitsigns.setup {}
+
+local guessindent = require 'guess-indent'
+guessindent.setup {}
 
 local ts = require 'nvim-treesitter.configs'
 ts.setup {}
@@ -55,10 +65,10 @@ local fzf = require 'fzf-lua'
 fzf.setup {}
 fzf.register_ui_select()
 wk.add({
-    {"<leader>o", function() fzf.files() end, desc = "Fzf files"},
-    {"<leader>F", function() fzf.blines() end, desc = "Fzf in file"},
-    {"<leader>f", function() fzf.lsp_document_symbols() end, desc = "Fzf lsp buffer symbols"},
-    {"<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols"},
+    { "<leader>o", function() fzf.files() end,                 desc = "Fzf files" },
+    { "<leader>F", function() fzf.blines() end,                desc = "Fzf in file" },
+    { "<leader>f", function() fzf.lsp_document_symbols() end,  desc = "Fzf lsp buffer symbols" },
+    { "<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols" },
 })
 
 local lualine = require 'lualine'
@@ -67,9 +77,9 @@ lualine.setup {}
 local barbar = require 'barbar'
 barbar.setup {}
 wk.add({
-    {"<leader>x", "<Cmd>BufferClose<CR>", desc = "Close current buffer"},
-    {"<leader>X", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Close all buffers but current or pinned"},
-    {"<leader>b", "<Cmd>BufferPick<CR>", desc = "Buffer pick"},
+    { "<leader>x", "<Cmd>BufferClose<CR>",                      desc = "Close current buffer" },
+    { "<leader>X", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Close all buffers but current or pinned" },
+    { "<leader>b", "<Cmd>BufferPick<CR>",                       desc = "Buffer pick" },
 })
 
 local luasnip = require 'luasnip'
@@ -79,11 +89,11 @@ local cmp = require 'cmp'
 cmp.setup {
     snippet = {
         exapnd = function(args)
-	    luasnip.lsp_expand(args.body)
-	end,
+            luasnip.lsp_expand(args.body)
+        end,
     },
     window = {
-      completion = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered(),
     },
     mapping = cmp.mapping.preset.insert({
         ['<C-Space>'] = cmp.mapping.complete(),
@@ -91,10 +101,10 @@ cmp.setup {
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
     }),
     sources = cmp.config.sources({
-	{ name = 'nvim_lsp' },
-	{ name = 'luasnip' },
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
     }, {
-	{ name = 'buffer' },
+        { name = 'buffer' },
     }),
 }
 
@@ -119,6 +129,11 @@ local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
 local lspconfig = require 'lspconfig'
 lspconfig.nixd.setup {
     capabilities = capabilities,
+    settings = {
+        formatting = {
+            command = { "nixfmt" },
+        },
+    },
 }
 lspconfig.rust_analyzer.setup {
     capabilities = capabilities,
@@ -128,7 +143,7 @@ lspconfig.lua_ls.setup {
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name
-            if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
+            if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
                 return
             end
         end
@@ -142,12 +157,20 @@ lspconfig.lua_ls.setup {
                 checkThirdParty = false,
                 library = {
                     vim.env.VIMRUNTIME,
-		    "${3rd}/luv/library"
+                    "${3rd}/luv/library"
                 }
             }
         })
     end,
     settings = {
-        Lua = {}
+        Lua = {
+            format = {
+                enable = true,
+                defaultConfig = {
+                    indent_style = "space",
+                    indent_size = "4",
+                },
+            }
+        }
     }
 }

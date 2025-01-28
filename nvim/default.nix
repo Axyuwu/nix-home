@@ -2,12 +2,13 @@
   config,
   lib,
   pkgs,
-  ... 
+  ...
 }:
 
 let
   cfg = config.nvim;
-in {
+in
+{
   options.nvim = with lib; {
     enable = mkEnableOption "Neovim module";
     package = mkOption {
@@ -31,7 +32,15 @@ in {
       barbar-nvim
       nvim-web-devicons
       luasnip
+      gitsigns-nvim
+      guess-indent-nvim
     ];
   };
-  config.home.packages = with pkgs; [ nixd rust-analyzer fzf lua-language-server ];
+  config.home.packages = with pkgs; [
+    nixd
+    rust-analyzer
+    fzf
+    lua-language-server
+    nixfmt-rfc-style
+  ];
 }
