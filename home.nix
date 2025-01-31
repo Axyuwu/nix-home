@@ -80,6 +80,7 @@ in
       gcc
       gimp
       pulseaudio
+      pavucontrol
     ])
     ++ [
       steam
