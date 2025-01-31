@@ -79,6 +79,7 @@ in
       cargo
       gcc
       gimp
+      pulseaudio
     ])
     ++ [
       steam
