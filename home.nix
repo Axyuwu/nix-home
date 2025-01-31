@@ -42,6 +42,7 @@ in
       "Discord" = "vesktop";
       "Prism Launcher" = "prismlauncher";
       "Gimp" = "gimp";
+      "Pavucontrol" = "pavucontrol";
     };
     startup = [
       "firefox"
