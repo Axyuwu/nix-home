@@ -83,6 +83,7 @@ in
       gimp
       pulseaudio
       pavucontrol
+      alvr
     ])
     ++ [
       steam
