@@ -43,6 +43,7 @@ in
       "Prism Launcher" = "prismlauncher";
       "Gimp" = "gimp";
       "Pavucontrol" = "pavucontrol";
+      "Envision" = "envision";
     };
     startup = [
       "firefox"
