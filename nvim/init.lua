@@ -71,9 +71,6 @@ wk.add({
     { "<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols" },
 })
 
-local neotree = require "neo-tree"
-neotree.setup {}
-
 local lualine = require 'lualine'
 lualine.setup {}
 

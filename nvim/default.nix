@@ -34,7 +34,6 @@ in
       luasnip
       gitsigns-nvim
       guess-indent-nvim
-      neo-tree-nvim
     ];
   };
   config.home.packages = with pkgs; [
