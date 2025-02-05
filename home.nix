@@ -43,6 +43,7 @@ in
       "Prism Launcher" = "prismlauncher";
       "Gimp" = "gimp";
       "Pavucontrol" = "pavucontrol";
+      "Droidcam" = "droidcam";
     };
     startup = [
       "firefox"
@@ -83,6 +84,11 @@ in
       pulseaudio
       pavucontrol
       alvr
+      droidcam
+      android-tools
+      v4l-utils
+      ffmpeg
+      mpv
     ])
     ++ [
       steam
