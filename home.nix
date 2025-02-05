@@ -156,9 +156,13 @@ in
       };
       settings = {
         shell = "fish";
+        clear_all_shortcuts = "no";
+        kitty_mod = "ctrl+shift";
       };
       keybindings = {
-        "ctrl+shift+i" = "launch --cwd=current --type=os-window --copy-env";
+        "f1" = "launch --cwd=current --type=os-window --copy-env";
+        "kitty_mod+c" = "copy_to_clipboard";
+        "kitty_mod+v" = "paste_from_clipboard";
       };
     };
     firefox = {
