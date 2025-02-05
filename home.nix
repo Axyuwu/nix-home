@@ -120,6 +120,7 @@ in
       shellAliases = {
         dev = "nix develop -c fish";
         build = "nix build";
+
       };
       functions = {
         fish_prompt = ''
@@ -155,6 +156,9 @@ in
       };
       settings = {
         shell = "fish";
+      };
+      keybindings = {
+        "ctrl+shift+i" = "launch --cwd=current --type=os-window --copy-env";
       };
     };
     firefox = {
