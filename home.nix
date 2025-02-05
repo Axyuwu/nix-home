@@ -156,7 +156,7 @@ in
       };
       settings = {
         shell = "fish";
-        clear_all_shortcuts = "no";
+        clear_all_shortcuts = "yes";
         kitty_mod = "ctrl+shift";
       };
       keybindings = {
