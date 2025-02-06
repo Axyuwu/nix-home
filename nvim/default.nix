@@ -42,5 +42,6 @@ in
     fzf
     lua-language-server
     nixfmt-rfc-style
+    fd
   ];
 }
