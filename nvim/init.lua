@@ -35,7 +35,7 @@ wk.add({
         { "<leader>w", "<cmd>w<cr>", desc = "Write" },
     },
     {
-        { "gd",        function() vim.lsp.buf.definition() end,                                           desc = "Jump to definition" },
+        { "gd",        function() vim.lsp.buf.definition() end,                                         desc = "Jump to definition" },
         { "<leader>d", function() vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" }) end, desc = "Hover diagnostics" },
     },
     {
@@ -69,6 +69,8 @@ wk.add({
     { "<leader>F", function() fzf.blines() end,                desc = "Fzf in file" },
     { "<leader>f", function() fzf.lsp_document_symbols() end,  desc = "Fzf lsp buffer symbols" },
     { "<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols" },
+    { "<leader>u", function() fzf.lsp_references() end,        desc = "Fzf lsp references" },
+    { "<leader>U", function() fzf.lsp_implementations() end,   desc = "Fzf lsp implementations" },
 })
 
 local lualine = require 'lualine'
