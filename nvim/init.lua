@@ -35,7 +35,7 @@ wk.add({
         { "<leader>w", "<cmd>w<cr>", desc = "Write" },
     },
     {
-        { "gd",        function() vim.lsp.buf.definition() end,                                         desc = "Jump to definition" },
+        { "gd",        function() vim.lsp.buf.definition() end,                                           desc = "Jump to definition" },
         { "<leader>d", function() vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" }) end, desc = "Hover diagnostics" },
     },
     {
