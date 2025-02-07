@@ -124,22 +124,22 @@ in
       };
       functions = {
         fish_prompt = ''
-          	  echo -n  -s (prompt_login) " "
+          echo -n  -s (prompt_login) " "
 
-          	  set_color cyan
-          	  if test -n "$IN_NIX_SHELL"
-          	    echo -n "<nix> "
-          	  end
+          set_color cyan
+          if test -n "$IN_NIX_SHELL"
+            echo -n "<nix> "
+          end
 
-          	  set_color yellow 
-          	  echo -n (prompt_pwd)
+          set_color yellow 
+          echo -n (prompt_pwd)
 
-          	  set_color normal
-          	  echo -n (fish_git_prompt)
+          set_color normal
+          echo -n (fish_git_prompt)
 
-          	  echo -n "> "
-          	'';
-        fish_greeting = ''	'';
+          echo -n "> "
+        '';
+        fish_greeting = "";
       };
     };
     bash.enable = true;
