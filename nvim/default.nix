@@ -34,6 +34,7 @@ in
       luasnip
       gitsigns-nvim
       guess-indent-nvim
+      lsp-format-nvim
     ];
   };
   config.home.packages = with pkgs; [

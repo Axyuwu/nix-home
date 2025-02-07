@@ -128,8 +128,13 @@ cmp.setup.cmdline(':', {
 
 local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
 
+local lspformat = require 'lsp-format'
+lspformat.setup {}
+local on_attach = lspformat.on_attach
+
 local lspconfig = require 'lspconfig'
 lspconfig.nixd.setup {
+    on_attach = on_attach,
     capabilities = capabilities,
     settings = {
         formatting = {
@@ -138,9 +143,11 @@ lspconfig.nixd.setup {
     },
 }
 lspconfig.rust_analyzer.setup {
+    on_attach = on_attach,
     capabilities = capabilities,
 }
 lspconfig.lua_ls.setup {
+    on_attach = on_attach,
     capabilities = capabilities,
     on_init = function(client)
         if client.workspace_folders then
