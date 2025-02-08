@@ -144,22 +144,6 @@ in
         fish_greeting = "";
       };
     };
-    zsh = {
-      enable = true;
-      autosuggestion = {
-        enable = true;
-        strategy = [
-          "history"
-          "completion"
-        ];
-      };
-      syntaxHighlighting = {
-        enable = true;
-      };
-      shellAliases = {
-        build = "nix build";
-      };
-    };
     bash.enable = true;
     direnv = {
       enable = true;
