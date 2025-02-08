@@ -145,7 +145,7 @@ in
     bash.enable = true;
     direnv = {
       enable = true;
-      fishIntegration = true;
+      enableFishIntegration = true;
       nix-direnv.enable = true;
     };
     tmux = {
