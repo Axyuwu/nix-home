@@ -144,6 +144,19 @@ in
         fish_greeting = "";
       };
     };
+    zsh = {
+      enable = true;
+      enableLsColors = true;
+      enableCompletion = true;
+      enableAutosuggestions = true;
+      syntaxHighlighting = {
+        enable = true;
+      };
+      shellAliases = {
+        build = "nix build";
+      };
+      histSize = 10000;
+    };
     bash.enable = true;
     direnv = {
       enable = true;
