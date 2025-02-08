@@ -120,8 +120,10 @@ in
       shellAliases = {
         dev = "nix develop -c fish";
         build = "nix build";
-
       };
+      shellInitLast = ''
+        direnv hook fish | source
+      '';
       functions = {
         fish_prompt = ''
           echo -n  -s (prompt_login) " "
