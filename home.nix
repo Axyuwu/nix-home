@@ -149,6 +149,10 @@ in
       enable = true;
       nix-direnv.enable = true;
       silent = true;
+      config.global = {
+        strict_env = true;
+        disable_stdin = true;
+      };
     };
     tmux = {
       enable = true;
