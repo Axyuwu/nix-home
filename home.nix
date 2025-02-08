@@ -143,6 +143,11 @@ in
       };
     };
     bash.enable = true;
+    direnv = {
+      enable = true;
+      fishIntegration = true;
+      nix-direnv.enable = true;
+    };
     tmux = {
       enable = true;
     };
