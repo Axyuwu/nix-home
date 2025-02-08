@@ -146,16 +146,19 @@ in
     };
     zsh = {
       enable = true;
-      enableLsColors = true;
-      enableCompletion = true;
-      enableAutosuggestions = true;
+      autosuggestions = {
+        enable = true;
+        strategy = [
+          "history"
+          "completion"
+        ];
+      };
       syntaxHighlighting = {
         enable = true;
       };
       shellAliases = {
         build = "nix build";
       };
-      histSize = 10000;
     };
     bash.enable = true;
     direnv = {
