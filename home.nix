@@ -146,7 +146,7 @@ in
     };
     zsh = {
       enable = true;
-      autosuggestions = {
+      autosuggestion = {
         enable = true;
         strategy = [
           "history"
