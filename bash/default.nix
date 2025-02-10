@@ -7,7 +7,7 @@
 
 let
   cfg = config.bash;
-  colors = builtins.mapAttrs (name: value: ''echo -n -e "\e[${builtins.toString value}m"'') {
+  colors = builtins.mapAttrs (name: value: ''echo -n -e "\001\e[${builtins.toString value}m\002"'') {
     default = 0;
     black = 30;
     red = 31;
