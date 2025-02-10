@@ -57,6 +57,7 @@ in
     enable = true;
   };
 
+  blesh.enable = true;
   bash = {
     enable = true;
     prompt = {

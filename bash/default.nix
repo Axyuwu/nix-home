@@ -66,6 +66,7 @@ let
   '';
 in
 {
+  imports = [ ./blesh.nix ];
   options.bash = with lib; {
     enable = mkEnableOption "Bash module";
     package = mkOption {
