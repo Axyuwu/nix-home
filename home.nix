@@ -25,6 +25,7 @@ in
   imports = [
     ./sway
     ./nvim
+    ./bash
   ];
 
   catppuccin = {
@@ -54,6 +55,16 @@ in
 
   nvim = {
     enable = true;
+  };
+
+  bash = {
+    enable = true;
+    prompt = {
+      hostname.enable = true;
+      nix.enable = true;
+      pwd.enable = true;
+      git.enable = true;
+    };
   };
 
   home.packages =
@@ -166,7 +177,7 @@ in
         size = 12;
       };
       settings = {
-        shell = "fish";
+        shell = "bash";
         clear_all_shortcuts = "yes";
         kitty_mod = "ctrl+shift";
       };
