@@ -93,12 +93,18 @@ in
         };
       };
     };
+    nix_shell_preserve_prompt = mkEnableOption "Makes nix-shell keep PS1";
   };
-  config.programs.bash = lib.mkIf cfg.enable {
-    enable = true;
-    package = cfg.package;
-    initExtra = ''
-      PS1='$(${prompt})'
-    '';
+  config = {
+    programs.bash = lib.mkIf cfg.enable {
+      enable = true;
+      package = cfg.package;
+      initExtra = ''
+        PS1='$(${prompt})'
+      '';
+      sessionVariables = {
+        NIX_SHELL_PRESERVE_PROMPT = if cfg.nix_shell_preserve_prompt then 1 else { };
+      };
+    };
   };
 }

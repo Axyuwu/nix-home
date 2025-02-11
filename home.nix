@@ -66,6 +66,7 @@ in
       pwd.enable = true;
       git.enable = true;
     };
+    nix_shell_preserve_prompt = true;
   };
 
   home.packages =
