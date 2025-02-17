@@ -128,36 +128,6 @@ in
       userEmail = "gilliardmarthey.axel@gmail.com";
     };
     fzf.enable = true;
-    fish = {
-      enable = true;
-      shellAliases = {
-        dev = "nix develop -c fish";
-        build = "nix build";
-      };
-      shellInitLast = ''
-        direnv hook fish | source
-      '';
-      functions = {
-        fish_prompt = ''
-          echo -n  -s (prompt_login) " "
-
-          set_color cyan
-          if test -n "$IN_NIX_SHELL"
-            echo -n "<nix> "
-          end
-
-          set_color yellow 
-          echo -n (prompt_pwd)
-
-          set_color normal
-          echo -n (fish_git_prompt)
-
-          echo -n "> "
-        '';
-        fish_greeting = "";
-      };
-    };
-    bash.enable = true;
     direnv = {
       enable = true;
       nix-direnv.enable = true;
