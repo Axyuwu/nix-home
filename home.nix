@@ -103,6 +103,7 @@ in
       ffmpeg
       mpv
       flatpak
+      beatsabermodmanager
     ])
     ++ [
       steam
