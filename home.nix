@@ -103,6 +103,8 @@ in
       ffmpeg
       mpv
       flatpak
+      wine
+      wine64
     ])
     ++ [
       steam
