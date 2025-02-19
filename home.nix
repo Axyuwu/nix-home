@@ -102,6 +102,7 @@ in
       v4l-utils
       ffmpeg
       mpv
+      flatpak
     ])
     ++ [
       steam
