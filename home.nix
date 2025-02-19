@@ -104,7 +104,6 @@ in
       mpv
       flatpak
       wine
-      wine64
     ])
     ++ [
       steam
