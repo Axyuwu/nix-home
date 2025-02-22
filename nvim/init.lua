@@ -71,6 +71,7 @@ wk.add({
     { "<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols" },
     { "<leader>u", function() fzf.lsp_references() end,        desc = "Fzf lsp references" },
     { "<leader>U", function() fzf.lsp_implementations() end,   desc = "Fzf lsp implementations" },
+    { "<leader>b", function() fzf.buffers() end,               desc = "Fzf buffers" },
 })
 
 local lualine = require 'lualine'
@@ -81,7 +82,6 @@ barbar.setup {}
 wk.add({
     { "<leader>x", "<Cmd>BufferClose<CR>",                      desc = "Close current buffer" },
     { "<leader>X", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Close all buffers but current or pinned" },
-    { "<leader>b", "<Cmd>BufferPick<CR>",                       desc = "Buffer pick" },
 })
 
 local luasnip = require 'luasnip'
