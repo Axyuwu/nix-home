@@ -40,7 +40,8 @@ let
   '';
   pwd_prompt = mkPrompt "pwd" ''
     ${colors.yellow}
-    echo -n "$(pwd)"
+    cwd=$(pwd)
+    echo -n ''${cwd/#$HOME/\~}
   '';
   git_prompt = mkPrompt "git" (
     let
