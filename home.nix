@@ -45,6 +45,7 @@ in
       "Gimp" = "gimp";
       "Pavucontrol" = "pavucontrol";
       "Droidcam" = "droidcam";
+      "ALVR" = "steam-run alvr-dashboard";
     };
     startup = [
       "firefox"
