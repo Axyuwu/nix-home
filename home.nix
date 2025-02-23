@@ -146,7 +146,7 @@ in
       enable = true;
       shellIntegration.enableFishIntegration = true;
       font = {
-        name = "jetbrains mono";
+        name = "Jetbrains Mono";
         package = pkgs.jetbrains-mono;
         size = 12;
       };
