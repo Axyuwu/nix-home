@@ -105,7 +105,7 @@ in
       flatpak
       wine
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-extra
       noto-fonts-color-emoji
     ])
