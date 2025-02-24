@@ -98,6 +98,10 @@ in
   };
   config = {
     programs.bash = lib.mkIf cfg.enable {
+      shellAliases = {
+        run = "nix run";
+        build = "nix build";
+      };
       enable = true;
       package = cfg.package;
       initExtra = ''
