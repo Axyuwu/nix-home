@@ -109,6 +109,7 @@ in
       noto-fonts-cjk-sans
       noto-fonts-extra
       noto-fonts-color-emoji
+      wlx-overlay-s
     ])
     ++ [
       steam
