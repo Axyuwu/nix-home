@@ -134,14 +134,14 @@ in
                   config = pkgs.writeText "i3status_config" ''
                     	      general {
                     	        colors = true
-                    		interval = 1
-                    		separator = " | "
+                              interval = 1
+                              separator = " | "
                     	      }
 
                     	      order += "time"
 
                     	      time {
-                                    format = "%A %Y-%m-%d %H:%M:%S"
+                              format = "%A %Y-%m-%d %H:%M:%S"
                     	      }
                     	    '';
                 in
@@ -193,6 +193,10 @@ in
         package = pkgs.swayfx;
         checkConfig = false;
       };
+
+    services.swayidle = {
+      enable = true;
+    };
 
     services.kanshi = {
       enable = true;
