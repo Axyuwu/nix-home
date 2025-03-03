@@ -202,7 +202,11 @@ in
     services.swayidle = {
       enable = true;
       timeouts = [
-        { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
+        {
+          timeout = 60;
+          command = ''${cfg.pkg}/bin/swaymsg "output * dmps off"'';
+          resumeCommand = ''${cfg.pkg}/bin/swaymsg "output * dmps on"'';
+        }
       ];
     };
 
