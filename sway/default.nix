@@ -19,6 +19,11 @@ in
 {
   options.sway = with lib; {
     enable = mkEnableOption "Sway module";
+    pkg = mkOption {
+      type = types.package;
+      description = "Sway package to use";
+      default = pkgs.swayfx;
+    };
     quickselect_config = mkOption {
       type = types.attrsOf types.str;
       description = "Attribute set defininig quickselect options for the keybind";
@@ -88,7 +93,7 @@ in
             "${modifier}+s" = "split toggle";
             "${modifier}+d" = "focus parent";
             "${modifier}+Shift+q" =
-              "exec swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' 'swaymsg exit'";
+              "exec ${cfg.pkg}/bin/swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' '${cfg.pkg}/bin/swaymsg exit'";
             "${modifier}+Shift+r" = "reload";
             "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
           };
@@ -190,12 +195,15 @@ in
         extraConfig = ''
           default_dim_inactive 0.1
         '';
-        package = pkgs.swayfx;
+        package = cfg.pkg;
         checkConfig = false;
       };
 
     services.swayidle = {
       enable = true;
+      timeouts = [
+        { timeout = 60; command = "${pkgs.swaylock}/bin/swaylock -fF"; }
+      ];
     };
 
     services.kanshi = {
