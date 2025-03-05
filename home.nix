@@ -46,6 +46,7 @@ in
       "Pavucontrol" = "pavucontrol";
       "Droidcam" = "droidcam";
       "ALVR" = "steam-run alvr_dashboard";
+      "Telegram" = "telegram-desktop";
     };
     startup = [
       "firefox"
@@ -110,6 +111,7 @@ in
       noto-fonts-extra
       noto-fonts-color-emoji
       wlx-overlay-s
+      telegram-desktop
     ])
     ++ [
       steam
