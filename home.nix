@@ -112,6 +112,7 @@ in
       noto-fonts-color-emoji
       wlx-overlay-s
       telegram-desktop
+      bashmount
     ])
     ++ [
       steam
