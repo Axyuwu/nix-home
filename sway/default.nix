@@ -199,16 +199,16 @@ in
         checkConfig = false;
       };
 
-    services.swayidle = {
+    /*services.swayidle = {
       enable = true;
       timeouts = [
-        /*{
+        {
           timeout = 60;
           command = ''${cfg.pkg}/bin/swaymsg "output * power off"'';
           resumeCommand = ''${cfg.pkg}/bin/swaymsg "output * power on"'';
-        }*/
+        }
       ];
-    };
+    };*/
 
     services.kanshi = {
       enable = true;
