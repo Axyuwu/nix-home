@@ -105,7 +105,7 @@ in
       ffmpeg
       mpv
       flatpak
-      wine
+      wineWowPackages.stable
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-extra
