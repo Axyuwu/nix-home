@@ -137,18 +137,18 @@ in
               statusCommand =
                 let
                   config = pkgs.writeText "i3status_config" ''
-                    	      general {
-                    	        colors = true
-                              interval = 1
-                              separator = " | "
-                    	      }
+                    general {
+                      colors = true
+                      interval = 1
+                      separator = " | "
+                    }
 
-                    	      order += "time"
+                    order += "time"
 
-                    	      time {
-                              format = "%A %Y-%m-%d %H:%M:%S"
-                    	      }
-                    	    '';
+                    time {
+                      format = "%A %Y-%m-%d %H:%M:%S"
+                    }
+                  '';
                 in
                 "${pkgs.i3status}/bin/i3status -c ${config}";
             }
@@ -189,7 +189,14 @@ in
             // {
               background = "$base";
             };
-          floating.criteria = [ { "title" = quickselect.title; } ];
+          floating.criteria =
+            let
+              addIf = cond: val: if cond then [ val ] else [ ];
+            in
+            lib.lists.flatten [
+              { "title" = quickselect.title; }
+              (addIf config.bsinstaller.enable { "title" = config.bsinstaller.title; })
+            ];
         };
 
         extraConfig = ''
@@ -199,16 +206,18 @@ in
         checkConfig = false;
       };
 
-    /*services.swayidle = {
-      enable = true;
-      timeouts = [
-        {
-          timeout = 60;
-          command = ''${cfg.pkg}/bin/swaymsg "output * power off"'';
-          resumeCommand = ''${cfg.pkg}/bin/swaymsg "output * power on"'';
-        }
-      ];
-    };*/
+    /*
+      services.swayidle = {
+        enable = true;
+        timeouts = [
+          {
+            timeout = 60;
+            command = ''${cfg.pkg}/bin/swaymsg "output * power off"'';
+            resumeCommand = ''${cfg.pkg}/bin/swaymsg "output * power on"'';
+          }
+        ];
+      };
+    */
 
     services.kanshi = {
       enable = true;

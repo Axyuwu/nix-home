@@ -26,6 +26,7 @@ in
     ./sway
     ./nvim
     ./bash
+    ./bsinstaller.nix
   ];
 
   catppuccin = {
@@ -69,6 +70,11 @@ in
       git.enable = true;
     };
     nix_shell_preserve_prompt = true;
+  };
+
+  bsinstaller = {
+    enable = true;
+    install_path = "$HOME/.steam/steam/steamapps/common/Beat Saber/";
   };
 
   home.packages =
