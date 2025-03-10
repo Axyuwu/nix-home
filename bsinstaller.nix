@@ -14,13 +14,13 @@ let
     path=$1
 
     if [[ $path != $prefix* ]]; then
-      printf "Invalid url! \n%s" $1
+      printf "Invalid url! \n%s" "$1"
       exit 1
     fi
 
     map_id="''${path#$prefix}"
 
-    printf "Installing map %s\n\n" $map_id
+    printf "Installing map %s\n\n" "$map_id"
 
     printf "Fetching map info\n\n"
 
@@ -44,7 +44,7 @@ let
       | ${pkgs.jq}/bin/jq -r '.mapper'
     )"
 
-    printf "Map: %s\nMapper: %s\n\n" $name $mapper
+    printf "Map: %s\nMapper: %s\n\n" "$name" "$mapper"
 
     printf "Fetching map archive\n\n"
 
