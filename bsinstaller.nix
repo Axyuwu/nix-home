@@ -44,7 +44,7 @@ let
       | ${pkgs.jq}/bin/jq -r '.mapper'
     )"
 
-    printf "Map: %s\nMapper: %s\n\n" "$name" "$mapper"
+    printf "\nMap: %s\nMapper: %s\n\n" "$name" "$mapper"
 
     printf "Fetching map archive\n\n"
 
@@ -66,7 +66,7 @@ let
     )
     rm $headers
 
-    printf "Decompressing archive\n\n"
+    printf "\nDecompressing archive\n\n"
 
     ${pkgs.unzip}/bin/unzip -n "$zip" -d "${cfg.install_path}/Beat Saber_Data/CustomLevels/$(basename "$filename" .zip)"
 
