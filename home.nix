@@ -119,6 +119,7 @@ in
       wlx-overlay-s
       telegram-desktop
       bashmount
+      jq
     ])
     ++ [
       steam

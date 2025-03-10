@@ -36,7 +36,7 @@ let
       | ${pkgs.jq}/bin/jq -r '.download_url'
     )"
 
-    printf "Map: %s\nMapper: %s\n\n"
+    printf "Map: %s\nMapper: %s\n\n" "$(${pkgs.jq}/bin/jq '.name')" "$(${pkgs.jq}/bin/jq '.uploader')"
 
     printf "Fetching map archive\n\n"
 
