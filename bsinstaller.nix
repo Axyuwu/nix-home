@@ -28,15 +28,23 @@ let
       curl -X GET \
       -H 'accept: application/json' \
       "https://api.beatsaver.com/maps/id/$map_id" \
-      | ${pkgs.jq}/bin/jq '{download_url: .versions.[0].downloadURL, name: .name, uploader: .uploader.name}'
+      | ${pkgs.jq}/bin/jq '{download_url: .versions.[0].downloadURL, name: .name, mapper: .uploader.name}'
     )"
 
     download_url="$(
       echo $map_info \
       | ${pkgs.jq}/bin/jq -r '.download_url'
     )"
+    name="$(
+      echo $map_info \
+      | ${pkgs.jq}/bin/jq -r '.name'
+    )"
+    mapper="$(
+      echo $map_info \
+      | ${pkgs.jq}/bin/jq -r '.mapper'
+    )"
 
-    printf "Map: %s\nMapper: %s\n\n" "$(${pkgs.jq}/bin/jq '.name')" "$(${pkgs.jq}/bin/jq '.uploader')"
+    printf "Map: %s\nMapper: %s\n\n" $name $mapper
 
     printf "Fetching map archive\n\n"
 
