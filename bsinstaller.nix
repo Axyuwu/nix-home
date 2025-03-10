@@ -14,24 +14,35 @@ let
     path=$1
 
     if [[ $path != $prefix* ]]; then
-      echo "Invalid url!"
-      echo $1
+      printf "Invalid url! \n%s" $1
       exit 1
     fi
 
     map_id="''${path#$prefix}"
 
-    zip=$(mktemp)
+    printf "Installing map %s\n\n" $map_id
 
-    download_url="$(
+    printf "Fetching map info\n\n"
+
+    map_info="$(
       curl -X GET \
       -H 'accept: application/json' \
       "https://api.beatsaver.com/maps/id/$map_id" \
-      | ${pkgs.jq}/bin/jq -r .versions.[0].downloadURL
+      | ${pkgs.jq}/bin/jq '{download_url: .versions.[0].downloadURL, name: .name, uploader: .uploader.name}'
     )"
 
+    download_url="$(
+      echo $map_info \
+      | ${pkgs.jq}/bin/jq -r '.download_url'
+    )"
+
+    printf "Map: %s\nMapper: %s\n\n"
+
+    printf "Fetching map archive\n\n"
+
     headers=$(mktemp)
-    echo $download_url
+
+    zip=$(mktemp)
 
     curl -X GET \
     $download_url \
@@ -46,6 +57,8 @@ let
       | xargs basename
     )
     rm $headers
+
+    printf "Decompressing archive\n\n"
 
     ${pkgs.unzip}/bin/unzip -n "$zip" -d "${cfg.install_path}/Beat Saber_Data/CustomLevels/$(basename "$filename" .zip)"
 
