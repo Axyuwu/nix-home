@@ -16,7 +16,7 @@ let
     if [[ $path != $prefix* ]]; then
       echo "Invalid url!"
       echo $1
-      exit
+      exit 1
     fi
 
     map_id="''${path#$prefix}"
