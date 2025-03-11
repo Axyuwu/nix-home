@@ -98,11 +98,11 @@ in
             "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
           };
 
-          seat = {
+          /*seat = {
             "*" = {
               hide_cursor = "3000";
             };
-          };
+          };*/
 
           bars = [
             {
