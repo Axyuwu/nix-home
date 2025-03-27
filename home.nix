@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   ...
@@ -181,6 +180,13 @@ in
       enable = true;
       profiles.${profile_name} = {
         isDefault = true;
+        extensions = {
+          packages = with pkgs.nur.repos.rycee.firefox-addons; [
+            ublock-origin
+            privacy-badger
+            sponsorblock
+          ];
+        };
       };
     };
   };
