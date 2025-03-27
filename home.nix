@@ -98,8 +98,8 @@ in
       unrar-free
       p7zip
       pamixer
-      rustc
-      cargo
+      #rustc
+      #cargo
       gcc
       gimp
       pulseaudio
