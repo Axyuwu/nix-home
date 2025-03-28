@@ -96,6 +96,12 @@ in
               "exec ${cfg.pkg}/bin/swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' '${cfg.pkg}/bin/swaymsg exit'";
             "${modifier}+Shift+r" = "reload";
             "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
+            "XF86AudioMute" = "exec ${pkg_exec "pamixer"} -t";
+            "XF86AudioLowerVolume" = "exec ${pkg_exec "pamixer"} -d 5";
+            "XF86AudioRaiseVolume" = "exec ${pkg_exec "pamixer"} -i 5";
+            "XF86MonBrightnessDown" = "exec ${pkg_exec "brightnessctl"} set 5%-";
+            "XF86MonBrightnessUp" = "exec ${pkg_exec "brightnessctl"} set 5%+";
+            "XF86AudioMicMute" = "exec ${pkg_exec "pamixer"} --default-sink -t";
           };
 
           /*
