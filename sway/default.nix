@@ -98,11 +98,13 @@ in
             "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
           };
 
-          /*seat = {
-            "*" = {
-              hide_cursor = "3000";
+          /*
+            seat = {
+              "*" = {
+                hide_cursor = "3000";
+              };
             };
-          };*/
+          */
 
           bars = [
             {
@@ -140,13 +142,25 @@ in
                     general {
                       colors = true
                       interval = 1
-                      separator = " | "
                     }
 
+                    order += "battery 0"
                     order += "time"
 
                     time {
                       format = "%A %Y-%m-%d %H:%M:%S"
+                    }
+
+                    battery 0 {
+                      format = "%status %percentage |"
+                      format_down = "No battery"
+                      status_chr = "⚡"
+                      status_bat = "🔋"
+                      status_unk = "?"
+                      status_full = "☻ "
+                      status_idle = "☻ "
+                      path = "/sys/class/power_supply/BAT%d/uevent"
+                      low_threshold = 10
                     }
                   '';
                 in
