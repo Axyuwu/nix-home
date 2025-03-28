@@ -153,7 +153,7 @@ in
 
                     battery 0 {
                       format = "%status %percentage |"
-                      format_down = "No battery"
+                      format_down = ""
                       status_chr = "⚡"
                       status_bat = "🔋"
                       status_unk = "?"
