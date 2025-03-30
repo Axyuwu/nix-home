@@ -35,7 +35,6 @@ wk.add({
         { "<leader>w", "<cmd>w<cr>", desc = "Write" },
     },
     {
-        { "gd",        function() vim.lsp.buf.definition() end,                                           desc = "Jump to definition" },
         { "<leader>d", function() vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" }) end, desc = "Hover diagnostics" },
     },
     {
@@ -65,13 +64,14 @@ local fzf = require 'fzf-lua'
 fzf.setup {}
 fzf.register_ui_select()
 wk.add({
-    { "<leader>o", function() fzf.files() end,                 desc = "Fzf files" },
-    { "<leader>F", function() fzf.blines() end,                desc = "Fzf in file" },
-    { "<leader>f", function() fzf.lsp_document_symbols() end,  desc = "Fzf lsp buffer symbols" },
-    { "<leader>O", function() fzf.lsp_workspace_symbols() end, desc = "Fzf lsp workspace symbols" },
-    { "<leader>u", function() fzf.lsp_references() end,        desc = "Fzf lsp references" },
-    { "<leader>U", function() fzf.lsp_implementations() end,   desc = "Fzf lsp implementations" },
-    { "<leader>b", function() fzf.buffers() end,               desc = "Fzf buffers" },
+    { "gd",        function() fzf.lsp_definitions { jump1 = true } end, desc = "Fzf to definition" },
+    { "<leader>o", function() fzf.files() end,                          desc = "Fzf files" },
+    { "<leader>F", function() fzf.blines() end,                         desc = "Fzf in file" },
+    { "<leader>f", function() fzf.lsp_document_symbols() end,           desc = "Fzf lsp buffer symbols" },
+    { "<leader>O", function() fzf.lsp_workspace_symbols() end,          desc = "Fzf lsp workspace symbols" },
+    { "<leader>u", function() fzf.lsp_references() end,                 desc = "Fzf lsp references" },
+    { "<leader>U", function() fzf.lsp_implementations() end,            desc = "Fzf lsp implementations" },
+    { "<leader>b", function() fzf.buffers() end,                        desc = "Fzf buffers" },
 })
 
 local lualine = require 'lualine'
