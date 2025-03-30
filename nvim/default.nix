@@ -20,6 +20,7 @@ in
   config.programs.neovim = lib.mkIf cfg.enable {
     enable = true;
     package = cfg.package;
+    defaultEditor = true;
     extraLuaConfig = builtins.readFile ./init.lua;
     plugins = with pkgs.vimPlugins; [
       nvim-lspconfig
