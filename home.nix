@@ -119,6 +119,8 @@ in
       telegram-desktop
       bashmount
       jq
+      gopass
+      gopass-jsonapi
     ])
     ++ [
       steam
@@ -185,9 +187,13 @@ in
             ublock-origin
             privacy-badger
             sponsorblock
+            gopass-bridge
           ];
         };
       };
+      nativeMessagingHosts = with pkgs; [
+        gopass-jsonapi
+      ];
     };
   };
 }
