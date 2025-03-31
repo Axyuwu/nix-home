@@ -121,6 +121,7 @@ in
       jq
       gopass
       gopass-jsonapi
+      age
     ])
     ++ [
       steam
