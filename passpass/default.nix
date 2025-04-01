@@ -42,7 +42,29 @@ let
     ${git} commit -am "added secret"
     ${git} push origin main
   '';
-  passpass-decrypt = pkgs.writeShellScriptBin "passpass-decrypt" ''
+  passpass-gen = pkgs.writeShellScriptBin "passpass-gen" ''
+    read -r -p 'Resource: ' RES
+    if [[ -z "$RES" ]]; then
+      echo "A password must be attached to a resource!"
+      exit 1
+    fi
+    read -r -p 'EMail: ' EMAIL
+    read -r -p 'Username: ' USERNAME
+
+    PASSWORD=$(tr -cd [:graph:] < /dev/random | head -c24)
+
+    SEARCH=$RES
+    if [[ -n $EMAIL ]]; then SEARCH="$SEARCH/$EMAIL"; fi
+    if [[ -n $USERNAME ]]; then SEARCH="$SEARCH/$USERNAME"; fi
+
+    (
+      echo "email: $EMAIL"
+      echo "username: $USERNAME"
+      echo "password: $PASSWORD"
+    ) | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH"
+
+  '';
+  passpass-auth = pkgs.writeShellScriptBin "passpass-auth" ''
     set -e -u -o pipefail
 
     if [[ ! -f /run/user/$UID/passpass/decrypted.key ]]; then
@@ -54,6 +76,11 @@ let
 
       mv -f $TMP /run/user/$UID/passpass/decrypted.key
     fi
+  '';
+  passpass-decrypt = pkgs.writeShellScriptBin "passpass-decrypt" ''
+    set -e -u -o pipefail
+
+    ${passpass-auth}/bin/passpass-auth
 
     KEY=/run/user/$UID/passpass/decrypted.key
 
@@ -69,11 +96,38 @@ let
 
     ${age} -d -i $KEY "''${SECRETS[$FILE_SEARCH]}"
   '';
+  passpass-remove = pkgs.writeShellScriptBin "passpass-remove" ''
+    set -e -u -o pipefail
+
+    ${passpass-auth}/bin/passpass-auth
+
+    KEY=/run/user/$UID/passpass/decrypted.key
+
+    declare -A SECRETS
+    for DIR in ${local}/store/*/; do
+      SECRETS["$(${age} -d -i $KEY $DIR/search)"]=$DIR
+    done
+
+    FILE_SEARCH="$(for SEARCH in "''${!SECRETS[@]}"; do
+      echo $SEARCH
+    done \
+    | ${pkgs.fzf}/bin/fzf)"
+
+    DIR="''${SECRETS[$FILE_SEARCH]}"
+
+    rm $DIR/search $DIR/value
+    rmdir $DIR
+
+    cd ${local}/store
+    ${git} add .
+    ${git} commit -am "removed secret"
+    ${git} push origin main
+  '';
   passpass-setup = lib.getExe (
     pkgs.writeShellApplication {
       name = "passpass-setup";
       runtimeInputs = with pkgs; [
-        coreutils
+        coreutils-full
         diffutils
       ];
       text = ''
@@ -107,7 +161,10 @@ in
     home.packages = [
       passpass-sync
       passpass-encrypt
+      passpass-gen
+      passpass-auth
       passpass-decrypt
+      passpass-remove
     ];
     systemd.user.services.passpass = {
       Unit.Description = "passpass activation";
