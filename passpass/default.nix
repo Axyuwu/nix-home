@@ -77,6 +77,11 @@ let
       mv -f $TMP /run/user/$UID/passpass/decrypted.key
     fi
   '';
+  passpass-unauth = pkgs.writeShellScriptBin "passpass-unauth" ''
+    set -e -u -o pipefail
+
+    rm /run/user/$UID/passpass/decrypted.key
+  '';
   passpass-decrypt = pkgs.writeShellScriptBin "passpass-decrypt" ''
     set -e -u -o pipefail
 
@@ -163,6 +168,7 @@ in
       passpass-encrypt
       passpass-gen
       passpass-auth
+      passpass-unauth
       passpass-decrypt
       passpass-remove
     ];
