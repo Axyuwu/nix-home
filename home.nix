@@ -26,6 +26,7 @@ in
     ./nvim
     ./bash
     ./bsinstaller.nix
+    ./passpass
   ];
 
   catppuccin = {
