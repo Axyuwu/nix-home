@@ -16,8 +16,8 @@ let
 
     cd ${local}/store
 
-    ${git} push origin main
-    ${git} pull origin main
+    ${git} pull ${remote}
+    ${git} push ${remote}
   '';
   passpass-encrypt = pkgs.writeShellScriptBin "passpass-encrypt" ''
     set -e -u -o pipefail
@@ -48,7 +48,7 @@ let
     cd ${local}/store
     ${git} add .
     ${git} commit -am "added secret"
-    ${git} push origin main
+    ${git} push ${remote}
   '';
   passpass-schemas =
     builtins.mapAttrs
@@ -302,7 +302,7 @@ let
     cd ${local}/store
     ${git} add .
     ${git} commit -am "removed secret"
-    ${git} push origin main
+    ${git} push ${remote}
   '';
   passpass-setup = lib.getExe (
     pkgs.writeShellApplication {
