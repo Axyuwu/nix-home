@@ -11,14 +11,6 @@ let
   local = lib.escapeShellArg "${config.home.homeDirectory}/.local/share/passpass";
   git = "${pkgs.git}/bin/git";
   age = "${pkgs.age}/bin/age";
-  passpass-sync = pkgs.writeShellScriptBin "passpass-sync" ''
-    set -e -u -o pipefail
-
-    cd ${local}/store
-
-    ${git} pull ${remote}
-    ${git} push ${remote}
-  '';
   passpass-encrypt = pkgs.writeShellScriptBin "passpass-encrypt" ''
     set -e -u -o pipefail
 
@@ -336,6 +328,20 @@ let
       '';
     }
   );
+  passpass-sync = pkgs.writeShellApplication {
+    name = "passpass-sync";
+    runtimeInputs = with pkgs; [
+      openssh
+    ];
+    text = ''
+      set -e -u -o pipefail
+
+      cd ${local}/store
+
+      ${git} pull ${remote}
+      ${git} push ${remote}
+    '';
+  };
 in
 {
   config = {
@@ -361,12 +367,12 @@ in
       Unit.Description = "passpass sync";
       Service = {
         Type = "oneshot";
-        ExecStart = passpass-setup;
+        ExecStart = lib.getExe passpass-sync;
       };
       Install.WantedBy = [ "default.target" ];
     };
     systemd.user.timers = {
-      battery_status = {
+      passpass-sync = {
         Unit.Description = "passpass sync with remote";
         Timer = {
           Unit = "passpass-sync";
