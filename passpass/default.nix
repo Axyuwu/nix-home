@@ -154,7 +154,9 @@ let
           echo "test"
           SECRET+=${lib.escapeShellArg "\n${field.name}: "} 
           SECRET+="$VALUE"
-          echo "${field.display} copied to clipboard"
+          echo "${field.display} copied to clipboard 1/2"
+          ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
+          echo "${field.display} copied to clipboard 2/2"
           ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
         '')
       ) schema}
