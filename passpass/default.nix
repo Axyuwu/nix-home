@@ -222,7 +222,6 @@ let
           )
 
           SECRET="''${SECRETS[IDX]#${lib.escapeShellArg "${schema.name}: "}}"
-          echo ''${#SECRET}
           if [[ -n "$SECRET" ]]; then
             echo ${lib.escapeShellArg "${schema.display} copied to clipboard"}
             ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$SECRET"
