@@ -357,5 +357,24 @@ in
       };
       Install.WantedBy = [ "default.target" ];
     };
+    systemd.user.services.passpass-sync = {
+      Unit.Description = "passpass sync";
+      Service = {
+        Type = "oneshot";
+        ExecStart = passpass-setup;
+      };
+      Install.WantedBy = [ "default.target" ];
+    };
+    systemd.user.timers = {
+      battery_status = {
+        Unit.Description = "passpass sync with remote";
+        Timer = {
+          Unit = "passpass-sync";
+          OnBootSec = "5m";
+          OnUnitActiveSec = "5m";
+        };
+        Install.WantedBy = [ "timers.target" ];
+      };
+    };
   };
 }
