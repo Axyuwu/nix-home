@@ -107,7 +107,7 @@ let
   );
   schema-to-gen =
     name: schema:
-    pkgs.writeShellScriptBin "passpass-gen-${name}" ''
+    pkgs.writeShellScript "passpass-gen-${name}" ''
       set -e -u -o pipefail
 
       SECRET=${lib.escapeShellArg "type: ${name}"}
@@ -162,7 +162,25 @@ let
       echo -n "$SECRET" \
         | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH"
     '';
-  passpass-gens = lib.attrsets.mapAttrsToList schema-to-gen passpass-schemas;
+  passpass-gen =
+    let
+      schemas = lib.attrsets.mapAttrsToList (name: schema: {
+        inherit name schema;
+      }) passpass-schemas;
+      schemas-dir = pkgs.runCommand "passpass-schema-dir" { } ''
+        mkdir $out
+        ${lib.strings.concatMapStringsSep "\n" (
+          schema: "ln -s ${schema-to-gen schema.name schema.schema} $out/${lib.escapeShellArg schema.name}"
+        ) schemas}
+      '';
+    in
+    pkgs.writeShellScriptBin "passpass-gen" ''
+      SCHEMA=$((
+      ${lib.strings.concatMapStringsSep "\n" (schema: "  echo ${lib.escapeShellArg schema.name}") schemas}
+      ) | ${pkgs.fzf}/bin/fzf)
+
+      ${schemas-dir}/$SCHEMA
+    '';
   passpass-auth = pkgs.writeShellScriptBin "passpass-auth" ''
     set -e -u -o pipefail
 
@@ -319,10 +337,11 @@ let
 in
 {
   config = {
-    home.packages = passpass-gens ++ [
+    home.packages = [
       passpass-sync
       passpass-encrypt
       passpass-auth
+      passpass-gen
       passpass-unauth
       passpass-decrypt
       passpass-get

@@ -15,6 +15,16 @@ let
   quickselect_config = quickselect.mkconfig (
     lib.attrsets.mapAttrs (_name: value: run_bg value) cfg.quickselect_config
   );
+  terminal-open =
+    { title, bin }:
+    pkgs.writeShellScript "terminal_open" ''
+      ${pkgs.kitty}/bin/kitty \
+      --title ${lib.escapeShellArg title} \
+      -o remember_window_size=no \
+      -o initial_window_width=56c \
+      -o initial_window_height=16c \
+      ${bin}
+    '';
 in
 {
   options.sway = with lib; {
@@ -95,6 +105,18 @@ in
             "${modifier}+Shift+q" =
               "exec ${cfg.pkg}/bin/swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' '${cfg.pkg}/bin/swaymsg exit'";
             "${modifier}+Shift+r" = "reload";
+            "${modifier}+p" = "exec ${
+              terminal-open {
+                title = "Passpass";
+                bin = "passpass-get";
+              }
+            }";
+            "${modifier}+Shift+p" = "exec ${
+              terminal-open {
+                title = "Passpass";
+                bin = "passpass-gen";
+              }
+            }";
             "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
             "XF86AudioMute" = "exec ${pkg_exec "pamixer"} -t";
             "XF86AudioLowerVolume" = "exec ${pkg_exec "pamixer"} -d 5";
@@ -215,6 +237,7 @@ in
             in
             lib.lists.flatten [
               { "title" = quickselect.title; }
+              { "title" = "Passpass"; }
               (addIf config.bsinstaller.enable { "title" = config.bsinstaller.title; })
             ];
         };
