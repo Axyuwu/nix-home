@@ -313,7 +313,7 @@ let
         fi
           
         if ! cmp -s /run/user/$UID/passpass/encrypted.key ${key.private}; then
-          ln ${key.private} /run/user/$UID/passpass/encrypted.key
+          ln -s ${key.private} /run/user/$UID/passpass/encrypted.key
           rm -f /run/user/$UID/passpass/decrypted.key
         fi
 
