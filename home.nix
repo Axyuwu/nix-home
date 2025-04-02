@@ -120,8 +120,6 @@ in
       telegram-desktop
       bashmount
       jq
-      gopass
-      gopass-jsonapi
       age
     ])
     ++ [
@@ -189,13 +187,9 @@ in
             ublock-origin
             privacy-badger
             sponsorblock
-            gopass-bridge
           ];
         };
       };
-      nativeMessagingHosts = with pkgs; [
-        gopass-jsonapi
-      ];
     };
   };
 }

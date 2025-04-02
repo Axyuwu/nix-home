@@ -117,6 +117,7 @@ in
                 bin = "passpass-gen";
               }
             }";
+            "${modifier}+c" = "exec ${pkgs.wl-clipboard}/bin/wl-copy -c";
             "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
             "XF86AudioMute" = "exec ${pkg_exec "pamixer"} -t";
             "XF86AudioLowerVolume" = "exec ${pkg_exec "pamixer"} -d 5";
