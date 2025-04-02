@@ -50,37 +50,29 @@ let
     ${git} commit -am "added secret"
     ${git} push origin main
   '';
-  passpass-schemas = {
-    account = [
-      {
-        name = "email";
-        display = "EMail";
-      }
-      {
-        name = "username";
-        display = "Username";
-      }
-      {
-        name = "password";
-        display = "Password";
-        generator = "head -c 24 <(tr -cd [:graph:] < /dev/random)";
-      }
-    ];
-  };
-  schema-to-gen =
-    name: schema':
-    let
-      schema =
+  passpass-schemas =
+    builtins.mapAttrs
+      (
+        _name: schema:
         builtins.map
           (
-            attr:
+            field:
             {
               required = false;
               search = true;
               value = true;
-              generator = "";
             }
-            // attr
+            // field
+            // (
+              if builtins.hasAttr "generator" field then
+                {
+                  required = true;
+                  search = false;
+                  value = true;
+                }
+              else
+                { }
+            )
           )
           (
             lib.lists.singleton {
@@ -89,60 +81,82 @@ let
               search = true;
               value = false;
             }
-            ++ schema'
-          );
-    in
-    pkgs.writeShellScriptBin "passpass-${name}-gen" ''
+            ++ schema
+          )
+      )
+      {
+        account = [
+          {
+            name = "email";
+            display = "EMail";
+          }
+          {
+            name = "username";
+            display = "Username";
+          }
+          {
+            name = "password";
+            display = "Password";
+            generator = "head -c 24 <(tr -cd [:graph:] < /dev/random)";
+          }
+        ];
+      };
+  map-gen-apply = (
+    fnogen: fgen: field:
+    if builtins.hasAttr "generator" field then fgen field else fnogen field
+  );
+  schema-to-gen =
+    name: schema:
+    pkgs.writeShellScriptBin "passpass-gen-${name}" ''
       set -e -u -o pipefail
 
-      SECRET=$(printf "type: %s" ${lib.escapeShellArg name})
+      SECRET=${lib.escapeShellArg "type: ${name}"}
       SEARCH="";
 
-      ${lib.strings.concatMapStringsSep "\n" (
-        field:
-        if field.generator == "" then
-          ''
-            read -r -p \
-              ${
-                lib.escapeShellArg (
-                  lib.concatStrings [
-                    field.display
-                    (lib.strings.optionalString (!(field.required)) " (Optional)")
-                    ": "
-                  ]
-                )
-              } \
-              VALUE
+      ${lib.strings.concatMapStringsSep "\n" (map-gen-apply
+        (field: ''
+          read -r -p \
+            ${
+              lib.escapeShellArg (
+                lib.concatStrings [
+                  field.display
+                  (lib.strings.optionalString (!(field.required)) " (Optional)")
+                  ": "
+                ]
+              )
+            } \
+            VALUE
 
-            ${lib.strings.optionalString field.required ''
-              if [[ -z "$VALUE" ]]; then
-                echo ${lib.escapeShellArg field.display} required
-                exit 1
-              fi
-            ''}
+          ${lib.strings.optionalString field.required ''
+            if [[ -z "$VALUE" ]]; then
+              echo ${lib.escapeShellArg field.display} required
+              exit 1
+            fi
+          ''}
 
-            ${lib.strings.optionalString field.value ''
-              SECRET=$(printf "%s\n%s: %s" "$SECRET"  ${lib.escapeShellArg field.name} "$VALUE")
-            ''}
-            ${lib.strings.optionalString field.search ''
-              if [[ -n "$VALUE" ]]; then
-                if [[ "$SEARCH" != "" ]]; then
-                  SEARCH+=" : "
-                fi
-                SEARCH+="$VALUE"
+          ${lib.strings.optionalString field.value ''
+            SECRET+=${lib.escapeShellArg "\n${field.name}: "} 
+            SECRET+="$VALUE"
+          ''}
+          ${lib.strings.optionalString field.search ''
+            if [[ -n "$VALUE" ]]; then
+              if [[ "$SEARCH" != "" ]]; then
+                SEARCH+=" : "
               fi
-            ''}
-          ''
-        else
-          ''
-            echo "$SECRET"
-            echo "$SEARCH"
-            VALUE=$(${field.generator})
-            echo "test"
-            SECRET+="$(echo "$VALUE")"
-            echo "${field.display} copied to clipboard"
-            ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
-          ''
+              SEARCH+="$VALUE"
+            fi
+          ''}
+        '')
+        (field: ''
+          echo "$SECRET"
+          echo "$SEARCH"
+          VALUE=$(${field.generator})
+          echo "test"
+          SECRET+=${lib.escapeShellArg "\n${field.name}: "} 
+          SECRET+="$VALUE"
+          echo "${field.display} copied to clipboard"
+          ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
+        '')
       ) schema}
 
       echo -n "$SECRET" \
@@ -189,6 +203,60 @@ let
     | ${pkgs.fzf}/bin/fzf)"
 
     ${age} -d -i $KEY "''${SECRETS[$FILE_SEARCH]}"
+  '';
+  schema-get =
+    name: schema:
+    pkgs.writeShellScript "passpass-get-${name}" ''
+      set -e -u -o pipefail
+
+      readarray -t SECRETS
+      IDX=0
+
+      ${lib.strings.concatMapStringsSep "\n" (schema: ''
+        [[ ''${SECRETS[IDX]} == ${lib.escapeShellArg "${schema.name}: "}* ]] \
+          || (
+            echo  "Invalid line in secret, expected line starting with header:"
+            echo ${lib.escapeShellArg "  ${schema.name}: "}
+            echo "Current line: $IDX"
+            exit 1
+          )
+
+          SECRET="''${SECRETS[IDX]#${lib.escapeShellArg "${schema.name}: "}}"
+          echo ''${#SECRET}
+          if [[ -n "$SECRET" ]]; then
+            echo ${lib.escapeShellArg "${schema.display} copied to clipboard"}
+            ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$SECRET"
+          fi
+
+          ((IDX+=1))
+      '') (builtins.filter (schema: schema.value) schema)}
+    '';
+  passpass-get = pkgs.writeShellScriptBin "passpass-get" ''
+    set -e -u -o pipefail
+
+    SECRET=$(${passpass-decrypt}/bin/passpass-decrypt)
+
+    TYPE=$(echo -n "$SECRET" | head -n 1)
+
+    [[ $TYPE == "type: "* ]] \
+      || (
+        echo "Secret does not have a type header, so no schema could be found matching"
+        exit 1
+      )
+
+    case "''${TYPE#"type: "}" in
+      ${lib.strings.concatStringsSep "\n" (
+        lib.attrsets.mapAttrsToList (name: schema: ''
+          ${lib.escapeShellArg name})
+            echo -n "$SECRET" | tail -n +2 | ${schema-get name schema}
+          ;;
+        '') passpass-schemas
+      )}
+    *)
+      echo "Unrecognized secret schema type: ''${TYPE#"type: "}"
+      exit 1
+      ;;
+    esac
   '';
   passpass-remove = pkgs.writeShellScriptBin "passpass-remove" ''
     set -e -u -o pipefail
@@ -258,6 +326,7 @@ in
       passpass-auth
       passpass-unauth
       passpass-decrypt
+      passpass-get
       passpass-remove
     ];
     systemd.user.services.passpass = {
