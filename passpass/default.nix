@@ -61,8 +61,11 @@ let
       echo "email: $EMAIL"
       echo "username: $USERNAME"
       echo "password: $PASSWORD"
-    ) | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH"
+    ) | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH" &
 
+    ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$PASSWORD"
+
+    wait
   '';
   passpass-auth = pkgs.writeShellScriptBin "passpass-auth" ''
     set -e -u -o pipefail
