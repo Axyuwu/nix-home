@@ -336,6 +336,7 @@ let
     text = ''
       set -e -u -o pipefail
 
+      mkdir -p ${local}/store
       cd ${local}/store
 
       ${git} pull ${remote}
