@@ -33,7 +33,15 @@ let
 
     ${age} -r ${key.public} -o $TMP/value
 
-    HASH="$(cat $TMP/* | sha1sum -b | head -c 40)"
+    HASH="$(cat $TMP/search | sha1sum -b | head -c 40)"
+
+    if [[ -d ${local}/store/$HASH ]]; then
+      echo "A secret is already associated with resource:"
+      echo "  $1"
+      echo "  (hash: $HASH)"
+      echo "Aborting"
+      exit 1
+    fi
 
     mv $TMP ${local}/store/$HASH
 
@@ -42,31 +50,105 @@ let
     ${git} commit -am "added secret"
     ${git} push origin main
   '';
-  passpass-gen = pkgs.writeShellScriptBin "passpass-gen" ''
-    read -r -p 'Resource: ' RES
-    if [[ -z "$RES" ]]; then
-      echo "A password must be attached to a resource!"
-      exit 1
-    fi
-    read -r -p 'EMail: ' EMAIL
-    read -r -p 'Username: ' USERNAME
+  passpass-schemas = {
+    account = [
+      {
+        name = "email";
+        display = "EMail";
+      }
+      {
+        name = "username";
+        display = "Username";
+      }
+      {
+        name = "password";
+        display = "Password";
+        generator = "head -c 24 <(tr -cd [:graph:] < /dev/random)";
+      }
+    ];
+  };
+  schema-to-gen =
+    name: schema':
+    let
+      schema =
+        builtins.map
+          (
+            attr:
+            {
+              required = false;
+              search = true;
+              value = true;
+              generator = "";
+            }
+            // attr
+          )
+          (
+            lib.lists.singleton {
+              display = "Resource";
+              required = true;
+              search = true;
+              value = false;
+            }
+            ++ schema'
+          );
+    in
+    pkgs.writeShellScriptBin "passpass-${name}-gen" ''
+      set -e -u -o pipefail
 
-    PASSWORD=$(tr -cd [:graph:] < /dev/random | head -c24)
+      SECRET=$(printf "type: %s" ${lib.escapeShellArg name})
+      SEARCH="";
 
-    SEARCH=$RES
-    if [[ -n $EMAIL ]]; then SEARCH="$SEARCH/$EMAIL"; fi
-    if [[ -n $USERNAME ]]; then SEARCH="$SEARCH/$USERNAME"; fi
+      ${lib.strings.concatMapStringsSep "\n" (
+        field:
+        if field.generator == "" then
+          ''
+            read -r -p \
+              ${
+                lib.escapeShellArg (
+                  lib.concatStrings [
+                    field.display
+                    (lib.strings.optionalString (!(field.required)) " (Optional)")
+                    ": "
+                  ]
+                )
+              } \
+              VALUE
 
-    (
-      echo "email: $EMAIL"
-      echo "username: $USERNAME"
-      echo "password: $PASSWORD"
-    ) | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH" &
+            ${lib.strings.optionalString field.required ''
+              if [[ -z "$VALUE" ]]; then
+                echo ${lib.escapeShellArg field.display} required
+                exit 1
+              fi
+            ''}
 
-    ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$PASSWORD"
+            ${lib.strings.optionalString field.value ''
+              SECRET=$(printf "%s\n%s: %s" "$SECRET"  ${lib.escapeShellArg field.name} "$VALUE")
+            ''}
+            ${lib.strings.optionalString field.search ''
+              if [[ -n "$VALUE" ]]; then
+                if [[ "$SEARCH" != "" ]]; then
+                  SEARCH+=" : "
+                fi
+                SEARCH+="$VALUE"
+              fi
+            ''}
+          ''
+        else
+          ''
+            echo "$SECRET"
+            echo "$SEARCH"
+            VALUE=$(${field.generator})
+            echo "test"
+            SECRET+="$(echo "$VALUE")"
+            echo "${field.display} copied to clipboard"
+            ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
+          ''
+      ) schema}
 
-    wait
-  '';
+      echo -n "$SECRET" \
+        | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH"
+    '';
+  passpass-gens = lib.attrsets.mapAttrsToList schema-to-gen passpass-schemas;
   passpass-auth = pkgs.writeShellScriptBin "passpass-auth" ''
     set -e -u -o pipefail
 
@@ -94,6 +176,10 @@ let
 
     declare -A SECRETS
     for DIR in ${local}/store/*/; do
+      if [[ ! -e $DIR ]]; then
+        echo "No secrets have been set!"
+        exit 1
+      fi
       SECRETS["$(${age} -d -i $KEY $DIR/search)"]=$DIR/value
     done
 
@@ -166,10 +252,9 @@ let
 in
 {
   config = {
-    home.packages = [
+    home.packages = passpass-gens ++ [
       passpass-sync
       passpass-encrypt
-      passpass-gen
       passpass-auth
       passpass-unauth
       passpass-decrypt
