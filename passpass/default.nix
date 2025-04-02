@@ -336,7 +336,6 @@ let
     text = ''
       set -e -u -o pipefail
 
-      mkdir -p ${local}/store
       cd ${local}/store
 
       ${git} pull ${remote}
@@ -371,6 +370,7 @@ in
         ExecStart = lib.getExe passpass-sync;
       };
       Install.WantedBy = [ "default.target" ];
+      Install.After = [ "passpass.service" ];
     };
     systemd.user.timers = {
       passpass-sync = {
