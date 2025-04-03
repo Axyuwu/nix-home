@@ -11,8 +11,70 @@ let
   local = lib.escapeShellArg "${config.home.homeDirectory}/.local/share/passpass";
   git = "${pkgs.git}/bin/git";
   age = "${pkgs.age}/bin/age";
-  passpass-encrypt = pkgs.writeShellScriptBin "passpass-encrypt" ''
+  passpass-auth = pkgs.writeShellScriptBin "passpass-auth" ''
     set -e -u -o pipefail
+
+    if [[ ! -f /run/user/$UID/passpass/decrypted.key ]]; then
+      TMP=/run/user/$UID/passpass/decrypted.key.tmp
+      touch $TMP
+      chmod 600 $TMP
+
+      ${age} -d -o $TMP /run/user/$UID/passpass/encrypted.key
+
+      mv -f $TMP /run/user/$UID/passpass/decrypted.key
+    fi
+  '';
+  passpass-unauth = pkgs.writeShellScriptBin "passpass-unauth" ''
+    set -e -u -o pipefail
+
+    rm /run/user/$UID/passpass/decrypted.key
+  '';
+  salt-bytes = 32;
+  common-funcs = ''
+    set -e -u -o pipefail
+
+    secure_encrypt () {
+      cat \
+        <(
+        head -c${builtins.toString salt-bytes}</dev/urandom \
+        | ${pkgs.xxd}/bin/xxd -p \
+        | tr -d '\n'
+        printf '\n'
+        ) \
+        - \
+        | ${age} -r ${key.public}
+    }
+
+    secure_decrypt () {
+      KEY=/run/user/$UID/passpass/decrypted.key
+      
+      ${age} -d -i "$KEY" | tail -c+${builtins.toString (salt-bytes * 2 + 2)}
+    }
+
+    # Sets the variable $SECRETS to the store search values and its value path
+    read_store () {
+      declare -g -A SECRETS
+      for DIR in ${local}/store/*/; do
+        if [[ ! -e $DIR ]]; then
+          continue
+        fi
+        INDEX=$(cat $DIR/index | secure_decrypt)
+        if [[ -n ''${SECRETS[INDEX]+x} ]]; then
+          echo "Dupplicate secret for index:"
+          echo "$INDEX"
+          echo "Paths:"
+          echo "''${SECRETS[INDEX]}"
+          echo "$DIR"
+          exit 1
+        fi
+        SECRETS[$INDEX]=$DIR
+      done
+    }
+  '';
+  passpass-encrypt = pkgs.writeShellScriptBin "passpass-encrypt" ''
+    ${common-funcs}
+
+    ${passpass-auth}/bin/passpass-auth
 
     TMP=$(mktemp -d)
 
@@ -21,26 +83,45 @@ let
       exit 1
     fi
 
-    echo -n "$1" | ${age} -r ${key.public} -o $TMP/search 
+    INDEX="$1"
 
-    ${age} -r ${key.public} -o $TMP/value
+    read_store
 
-    HASH="$(cat $TMP/search | sha1sum -b | head -c 40)"
-
-    if [[ -d ${local}/store/$HASH ]]; then
-      echo "A secret is already associated with resource:"
-      echo "  $1"
-      echo "  (hash: $HASH)"
-      echo "Aborting"
+    if [[ -n "''${SECRETS["$INDEX"]:-}" ]]; then
       exit 1
     fi
 
-    mv $TMP ${local}/store/$HASH
+    echo -n "$INDEX" | secure_encrypt > $TMP/index
+
+    secure_encrypt > $TMP/value
+
+    STORE_PATH=$(${pkgs.xxd}/bin/xxd -p <(head -c20</dev/urandom))
+
+    mv $TMP ${local}/store/$STORE_PATH
 
     cd ${local}/store
     ${git} add .
     ${git} commit -am "added secret"
     ${git} push ${remote}
+  '';
+  passpass-decrypt = pkgs.writeShellScriptBin "passpass-decrypt" ''
+    ${common-funcs}
+
+    ${passpass-auth}/bin/passpass-auth
+
+    read_store
+
+    if [[ ''${#SECRETS[@]} == 0 ]]; then
+      echo "No secrets have been set!"
+      exit 1
+    fi
+
+    INDEX="$(for INDEX in "''${!SECRETS[@]}"; do
+      echo "$INDEX"
+    done \
+    | ${pkgs.fzf}/bin/fzf)"
+
+    cat "''${SECRETS[$INDEX]}"/value | secure_decrypt
   '';
   passpass-schemas =
     builtins.mapAttrs
@@ -175,47 +256,6 @@ let
 
       ${schemas-dir}/$SCHEMA
     '';
-  passpass-auth = pkgs.writeShellScriptBin "passpass-auth" ''
-    set -e -u -o pipefail
-
-    if [[ ! -f /run/user/$UID/passpass/decrypted.key ]]; then
-      TMP=/run/user/$UID/passpass/decrypted.key.tmp
-      touch $TMP
-      chmod 600 $TMP
-
-      ${age} -d -o $TMP /run/user/$UID/passpass/encrypted.key
-
-      mv -f $TMP /run/user/$UID/passpass/decrypted.key
-    fi
-  '';
-  passpass-unauth = pkgs.writeShellScriptBin "passpass-unauth" ''
-    set -e -u -o pipefail
-
-    rm /run/user/$UID/passpass/decrypted.key
-  '';
-  passpass-decrypt = pkgs.writeShellScriptBin "passpass-decrypt" ''
-    set -e -u -o pipefail
-
-    ${passpass-auth}/bin/passpass-auth
-
-    KEY=/run/user/$UID/passpass/decrypted.key
-
-    declare -A SECRETS
-    for DIR in ${local}/store/*/; do
-      if [[ ! -e $DIR ]]; then
-        echo "No secrets have been set!"
-        exit 1
-      fi
-      SECRETS["$(${age} -d -i $KEY $DIR/search)"]=$DIR/value
-    done
-
-    FILE_SEARCH="$(for SEARCH in "''${!SECRETS[@]}"; do
-      echo $SEARCH
-    done \
-    | ${pkgs.fzf}/bin/fzf)"
-
-    ${age} -d -i $KEY "''${SECRETS[$FILE_SEARCH]}"
-  '';
   schema-get =
     name: schema:
     pkgs.writeShellScript "passpass-get-${name}" ''
@@ -272,23 +312,20 @@ let
   passpass-remove = pkgs.writeShellScriptBin "passpass-remove" ''
     set -e -u -o pipefail
 
+    ${common-funcs}
+
     ${passpass-auth}/bin/passpass-auth
 
-    KEY=/run/user/$UID/passpass/decrypted.key
+    read_store
 
-    declare -A SECRETS
-    for DIR in ${local}/store/*/; do
-      SECRETS["$(${age} -d -i $KEY $DIR/search)"]=$DIR
-    done
-
-    FILE_SEARCH="$(for SEARCH in "''${!SECRETS[@]}"; do
-      echo $SEARCH
+    FILE_INDEX="$(for INDEX in "''${!SECRETS[@]}"; do
+      echo $INDEX
     done \
     | ${pkgs.fzf}/bin/fzf)"
 
-    DIR="''${SECRETS[$FILE_SEARCH]}"
+    DIR="''${SECRETS[$FILE_INDEX]}"
 
-    rm $DIR/search $DIR/value
+    rm $DIR/index $DIR/value
     rmdir $DIR
 
     cd ${local}/store
@@ -346,14 +383,14 @@ in
 {
   config = {
     home.packages = [
-      passpass-sync
-      passpass-encrypt
       passpass-auth
-      passpass-gen
       passpass-unauth
+      passpass-encrypt
       passpass-decrypt
+      passpass-gen
       passpass-get
       passpass-remove
+      passpass-sync
     ];
     systemd.user.services.passpass = {
       Unit.Description = "passpass activation";
