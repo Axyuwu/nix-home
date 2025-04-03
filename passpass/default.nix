@@ -58,12 +58,12 @@ let
         if [[ ! -e $DIR ]]; then
           continue
         fi
-        INDEX=$(cat $DIR/index | secure_decrypt)
-        if [[ -n ''${SECRETS[INDEX]+x} ]]; then
+        local INDEX=$(cat $DIR/index | secure_decrypt)
+        if [[ -n ''${SECRETS[$INDEX]+x} ]]; then
           echo "Dupplicate secret for index:"
           echo "$INDEX"
           echo "Paths:"
-          echo "''${SECRETS[INDEX]}"
+          echo "''${SECRETS[$INDEX]}"
           echo "$DIR"
           exit 1
         fi
@@ -87,7 +87,12 @@ let
 
     read_store
 
-    if [[ -n "''${SECRETS["$INDEX"]:-}" ]]; then
+    if [[ -n "''${SECRETS[$INDEX]:-}" ]]; then
+      echo "Secret already exists for resource:"
+      echo "  $INDEX"
+      echo "Path:"
+      echo "  ''${SECRETS[$INDEX]}"
+      echo "Aborting"
       exit 1
     fi
 
