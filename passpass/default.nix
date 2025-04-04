@@ -29,26 +29,17 @@ let
 
     rm /run/user/$UID/passpass/decrypted.key
   '';
-  salt-bytes = 32;
   common-funcs = ''
     set -e -u -o pipefail
 
     secure_encrypt () {
-      cat \
-        <(
-        head -c${builtins.toString salt-bytes}</dev/urandom \
-        | ${pkgs.xxd}/bin/xxd -p \
-        | tr -d '\n'
-        printf '\n'
-        ) \
-        - \
-        | ${age} -r ${key.public}
+      ${age} -r ${key.public}
     }
 
     secure_decrypt () {
-      KEY=/run/user/$UID/passpass/decrypted.key
+      local KEY=/run/user/$UID/passpass/decrypted.key
       
-      ${age} -d -i "$KEY" | tail -c+${builtins.toString (salt-bytes * 2 + 2)}
+      ${age} -d -i "$KEY"
     }
 
     # Sets the variable $SECRETS to the store search values and its value path
