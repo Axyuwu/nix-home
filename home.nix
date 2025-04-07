@@ -48,6 +48,7 @@ in
       "Droidcam" = "droidcam";
       "ALVR" = "steam-run alvr_dashboard";
       "Telegram" = "telegram-desktop";
+      "BSManager" = "bs-manager";
     };
     startup = [
       "firefox"
@@ -121,6 +122,7 @@ in
       bashmount
       jq
       age
+      bs-manager
     ])
     ++ [
       steam
