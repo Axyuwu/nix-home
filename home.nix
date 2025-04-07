@@ -74,7 +74,7 @@ in
   };
 
   bsinstaller = {
-    enable = false;
+    enable = true;
     install_path = "$HOME/.steam/steam/steamapps/common/Beat Saber/";
   };
 
@@ -122,7 +122,6 @@ in
       bashmount
       jq
       age
-      bs-manager
     ])
     ++ [
       steam
