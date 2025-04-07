@@ -74,7 +74,7 @@ in
   };
 
   bsinstaller = {
-    enable = true;
+    enable = false;
     install_path = "$HOME/.steam/steam/steamapps/common/Beat Saber/";
   };
 
