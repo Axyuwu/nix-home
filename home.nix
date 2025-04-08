@@ -127,6 +127,7 @@ in
       xxd
       bc
       bat
+      slides
     ])
     ++ [
       steam
