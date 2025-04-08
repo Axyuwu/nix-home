@@ -123,7 +123,6 @@ in
       krita
       xxd
       bc
-      bat
       slides
       calcurse
     ])
@@ -196,5 +195,6 @@ in
         };
       };
     };
+    bat.enable = true;
   };
 }
