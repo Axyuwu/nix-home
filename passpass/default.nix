@@ -402,7 +402,6 @@ in
         Type = "oneshot";
         ExecStart = lib.getExe passpass-sync;
       };
-      Install.WantedBy = [ "default.target" ];
       Install.After = [ "passpass.service" ];
     };
     systemd.user.timers = {
