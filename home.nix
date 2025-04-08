@@ -50,6 +50,7 @@ in
       "Telegram" = "telegram-desktop";
       "BSManager" = "bs-manager";
       "Krita" = "krita";
+      "Calcurse" = "kitty calcurse";
     };
     startup = [
       "firefox"
