@@ -9,12 +9,6 @@ let
   cfg = config.sway;
   pkg_bin = pkg: file: "${pkgs.${pkg}}/bin/${file}";
   pkg_exec = pkg: pkg_bin pkg pkg;
-  quickselect = import ../quickselect.nix { inherit pkgs; };
-  run_bg =
-    program: pkgs.writeShellScript "run_background" "${pkg_bin "swayfx" "swaymsg"} exec ${program}";
-  quickselect_config = quickselect.mkconfig (
-    lib.attrsets.mapAttrs (_name: value: run_bg value) cfg.quickselect_config
-  );
   terminal-open =
     { title, bin }:
     pkgs.writeShellScript "terminal_open" ''
@@ -95,15 +89,24 @@ in
             "${modifier}+Control+${right}" = "resize grow width 10 px";
             "${modifier}+space" = "focus mode_toggle";
             "${modifier}+f" = "fullscreen toggle";
-            "${modifier}+i" = "exec ${quickselect.bin} ${quickselect_config}";
+            "${modifier}+i" = "exec ${
+              terminal-open {
+                title = "Quickselect";
+                bin = "quickselect";
+              }
+            }";
             "${modifier}+Shift+i" = "exec ${cfg.terminal}";
             "${modifier}+x" = "kill";
             "${modifier}+Shift+s" =
               "exec ${pkg_exec "slurp"} | ${pkg_exec "grim"} -g - - | ${pkg_bin "wl-clipboard" "wl-copy"}";
             "${modifier}+s" = "split toggle";
             "${modifier}+d" = "focus parent";
-            "${modifier}+Shift+q" =
-              "exec ${cfg.pkg}/bin/swaynag -t warning -m 'Do you really want to exit sway?' -b 'Yes' '${cfg.pkg}/bin/swaymsg exit'";
+            "${modifier}+Shift+q" = ''
+              exec ${cfg.pkg}/bin/swaynag \
+                -t warning \
+                -m 'Do you really want to exit sway?' \
+                -b 'Yes' '${cfg.pkg}/bin/swaymsg exit'
+            '';
             "${modifier}+Shift+r" = "reload";
             "${modifier}+p" = "exec ${
               terminal-open {
@@ -237,7 +240,7 @@ in
               addIf = cond: val: if cond then [ val ] else [ ];
             in
             lib.lists.flatten [
-              { "title" = quickselect.title; }
+              { "title" = "Quickselect"; }
               { "title" = "Passpass"; }
               (addIf config.bsinstaller.enable { "title" = config.bsinstaller.title; })
             ];

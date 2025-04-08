@@ -1,36 +1,47 @@
-# Requires jetbrains mono to be installed if the terminal_open value isn't set
 {
+  config,
   pkgs,
-  title ? "Quickselect",
-  # function returning a shell script derivation that, given a title and a binary file, opens that binary file with that title inside a terminal
-  terminal_open ?
-    { title, quickselect_bin }:
-    pkgs.writeShellScript "terminal_open" ''
-      ${pkgs.kitty}/bin/kitty \
-      --title "${title}" \
-      -o remember_window_size=no \
-      -o initial_window_width=56c \
-      -o initial_window_height=16c \
-      ${quickselect_bin} "$1"
-    '',
+  lib,
+  ...
 }:
 
-rec {
-  bin = terminal_open {
-    inherit title;
-    quickselect_bin = pkgs.writeShellScript "quickselect" ''
-      $("$1"/"$(ls -A "$1" | ${pkgs.fzf}/bin/fzf)")
+let
+  cfg = config.quickselect;
+in
+{
+  options.quickselect = with lib; {
+    enable = mkEnableOption "Quickselect";
+    programs = mkOption {
+      type = types.attrsOf types.str;
+      description = "Attribute set defininig the programs quickselect will propose, by default";
+      default = { };
+    };
+  };
+  config = lib.mkIf cfg.enable {
+    home.packages = [
+      (pkgs.writeShellScriptBin "quickselect" ''
+        set -e -u -o pipefail
+
+        if [[ $# == 0 ]]; then
+          DIR=$HOME/.config/quickselect/programs
+        else
+          DIR=$1
+        fi
+
+        PROGRAM="$(ls -A $DIR | ${pkgs.fzf}/bin/fzf)"
+        ${pkgs.swayfx}/bin/swaymsg exec $DIR/$PROGRAM
+      '')
+    ];
+    home.file.".config/quickselect/programs".source = pkgs.runCommand "quickselect_mkconfig" { } ''
+      mkdir $out
+      ${
+        (lib.strings.concatStringsSep "\n" (
+          lib.attrsets.mapAttrsToList (name: value: ''
+            ln -s ${lib.escapeShellArg (pkgs.writeShellScript name value)} \
+              $out/${lib.escapeShellArg name}
+          '') cfg.programs
+        ))
+      }
     '';
   };
-  pkg = pkgs.writeShellScriptBin "quickselect" ''
-    ${bin}
-  '';
-  mkconfig =
-    set:
-    pkgs.runCommand "quickselect_mkconfig" { } (
-      pkgs.lib.lists.foldl (a: b: a + b) "mkdir $out \n" (
-        pkgs.lib.attrsets.mapAttrsToList (name: value: "ln -s \"${value}\" \"$out/${name}\"\n") set
-      )
-    );
-  inherit title;
 }

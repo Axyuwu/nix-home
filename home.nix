@@ -27,6 +27,7 @@ in
     ./bash
     ./bsinstaller.nix
     ./passpass
+    ./quickselect.nix
   ];
 
   catppuccin = {
@@ -36,7 +37,12 @@ in
 
   sway = {
     enable = true;
-    quickselect_config = {
+    terminal = "kitty";
+  };
+
+  quickselect = {
+    enable = true;
+    programs = {
       "Kitty" = "kitty";
       "Steam" = "steam";
       "Neovim" = "kitty nvim";
@@ -48,11 +54,9 @@ in
       "Droidcam" = "droidcam";
       "ALVR" = "steam-run alvr_dashboard";
       "Telegram" = "telegram-desktop";
-      "BSManager" = "bs-manager";
       "Krita" = "krita";
       "Calcurse" = "kitty calcurse";
     };
-    terminal = "kitty";
   };
 
   nvim = {
