@@ -124,6 +124,7 @@ in
       jq
       age
       krita
+      xxd
     ])
     ++ [
       steam
