@@ -29,7 +29,7 @@ in
         fi
 
         PROGRAM="$(ls -A $DIR | ${pkgs.fzf}/bin/fzf)"
-        ${pkgs.swayfx}/bin/swaymsg exec $DIR/$PROGRAM
+        ${pkgs.swayfx}/bin/swaymsg exec "$DIR/$PROGRAM"
       '')
     ];
     home.file.".config/quickselect/programs".source = pkgs.runCommand "quickselect_mkconfig" { } ''
