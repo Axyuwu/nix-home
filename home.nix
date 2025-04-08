@@ -128,6 +128,7 @@ in
       bc
       bat
       slides
+      calcurse
     ])
     ++ [
       steam
