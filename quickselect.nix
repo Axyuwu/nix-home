@@ -28,8 +28,9 @@ in
           DIR=$1
         fi
 
-        PROGRAM="$(ls -A $DIR | ${pkgs.fzf}/bin/fzf)"
-        ${pkgs.swayfx}/bin/swaymsg exec "$DIR/$PROGRAM"
+        PROGRAM="$(ls -A "$DIR" | ${pkgs.fzf}/bin/fzf)"
+        REAL_PATH="$(readlink "$DIR/$PROGRAM")"
+        ${pkgs.swayfx}/bin/swaymsg exec $REAL_PATH
       '')
     ];
     home.file.".config/quickselect/programs".source = pkgs.runCommand "quickselect_mkconfig" { } ''
