@@ -125,6 +125,7 @@ in
       age
       krita
       xxd
+      bc
     ])
     ++ [
       steam
