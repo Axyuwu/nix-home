@@ -49,6 +49,7 @@ in
       "ALVR" = "steam-run alvr_dashboard";
       "Telegram" = "telegram-desktop";
       "BSManager" = "bs-manager";
+      "Krita" = "krita";
     };
     startup = [
       "firefox"
@@ -122,6 +123,7 @@ in
       bashmount
       jq
       age
+      krita
     ])
     ++ [
       steam
