@@ -126,6 +126,7 @@ in
       krita
       xxd
       bc
+      bat
     ])
     ++ [
       steam
