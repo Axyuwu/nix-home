@@ -52,10 +52,6 @@ in
       "Krita" = "krita";
       "Calcurse" = "kitty calcurse";
     };
-    startup = [
-      "firefox"
-      "vesktop"
-    ];
     terminal = "kitty";
   };
 
