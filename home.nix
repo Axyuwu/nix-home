@@ -50,9 +50,9 @@ in
     };
   };
 
-  nvim = {
-    enable = true;
-  };
+  passpass.enable = true;
+
+  nvim.enable = true;
 
   blesh.enable = true;
   bash = {

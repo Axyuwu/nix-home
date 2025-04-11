@@ -5,6 +5,7 @@
   ...
 }:
 let
+  cfg = config.passpass;
   key.public = "age1a3t3jnvayl40n4l5c7zmuglsw07u3m2p52ckr67tlj76w6t464gsufuveg";
   key.private = ./passpass_key.age;
   remote = "git@github.com:Axyuwu/passpass-store.git";
@@ -377,7 +378,8 @@ let
   };
 in
 {
-  config = {
+  options.passpass.enable = lib.options.mkEnableOption "passpass";
+  config = lib.mkIf cfg.enable {
     home.packages = [
       passpass-auth
       passpass-unauth
