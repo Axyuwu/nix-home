@@ -11,6 +11,7 @@ in
 {
   options.system_options.vr.enable = lib.options.mkEnableOption "VR configuration";
   config = lib.mkIf cfg.enable {
+    system_options.graphical.enable = true;
     quickselect.programs = {
       "ALVR" = "steam-run alvr_dashboard";
     };

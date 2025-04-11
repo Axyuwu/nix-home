@@ -26,33 +26,51 @@
       ...
     }:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [ nur.overlays.default ];
+      configs = {
+        helium = {
+          system = "x86_64-linux";
+          options = {
+            minimal = true;
+            graphical = true;
+            vr = true;
+          };
+        };
+        neon = {
+          system = "x86_64-linux";
+          options = {
+            minimal = true;
+            graphical = true;
+          };
+        };
+      };
+      pkgs = {
+        "x86_64-linux" = import nixpkgs {
+          system = "x86_64-linux";
+          overlays = [ nur.overlays.default ];
+        };
       };
     in
     {
-      formatter.${system} = pkgs.nixfmt-rfc-style;
-      homeConfigurations."axy" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [
-          {
-            system_options = {
-              minimal.enable = true;
-              graphical.enable = true;
-              vr.enable = true;
-            };
-          }
-          ./system_options
-          catppuccin.homeManagerModules.catppuccin
-          ./sway
-          ./nvim
-          ./bash
-          ./bsinstaller.nix
-          ./passpass
-          ./quickselect.nix
-        ];
-      };
+      formatter."x86_64-linux" = pkgs."x86_64-linux".nixfmt-rfc-style;
+      homeConfigurations = builtins.mapAttrs (
+        name:
+        config@{ system, options, ... }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgs.${system};
+          modules = [
+            {
+              system_options = builtins.mapAttrs (_: enable: { inherit enable; }) options;
+            }
+            ./system_options
+            catppuccin.homeManagerModules.catppuccin
+            ./sway
+            ./nvim
+            ./bash
+            ./bsinstaller.nix
+            ./passpass
+            ./quickselect.nix
+          ];
+        }
+      ) configs;
     };
 }
