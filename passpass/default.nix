@@ -255,7 +255,7 @@ let
     '';
   schema-get =
     name: schema:
-    pkgs.writeShellScript "passpass-get-${name}" ''
+    pkgs.writeShellScript "schema-get-${name}" ''
       set -e -u -o pipefail
 
       readarray -t SECRETS
@@ -270,13 +270,13 @@ let
             exit 1
           )
 
-          SECRET="''${SECRETS[IDX]#${lib.escapeShellArg "${schema.name}: "}}"
-          if [[ -n "$SECRET" ]]; then
-            echo ${lib.escapeShellArg "${schema.display} copied to clipboard"}
-            ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$SECRET"
-          fi
+        SECRET="''${SECRETS[IDX]#${lib.escapeShellArg "${schema.name}: "}}"
+        if [[ -n "$SECRET" ]]; then
+          echo ${lib.escapeShellArg "${schema.display} copied to clipboard"}
+          ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$SECRET"
+        fi
 
-          ((IDX+=1))
+        ((IDX+=1))
       '') (builtins.filter (schema: schema.value) schema)}
     '';
   passpass-get = pkgs.writeShellScriptBin "passpass-get" ''
@@ -378,18 +378,28 @@ let
   };
 in
 {
-  options.passpass.enable = lib.options.mkEnableOption "passpass";
+  options.passpass = {
+    enable = lib.options.mkEnableOption "passpass";
+    graphical = lib.options.mkOption {
+      description = "Whether to add clipboard features, relying on a DE";
+      type = lib.types.bool;
+      default = false;
+    };
+  };
   config = lib.mkIf cfg.enable {
-    home.packages = [
-      passpass-auth
-      passpass-unauth
-      passpass-encrypt
-      passpass-decrypt
-      passpass-gen
-      passpass-get
-      passpass-remove
-      passpass-sync
-    ];
+    home.packages =
+      [
+        passpass-auth
+        passpass-unauth
+        passpass-encrypt
+        passpass-decrypt
+        passpass-remove
+        passpass-sync
+      ]
+      ++ lib.lists.optionals cfg.graphical [
+        passpass-gen
+        passpass-get
+      ];
     systemd.user.services.passpass = {
       Unit.Description = "passpass activation";
       Service = {

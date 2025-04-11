@@ -37,6 +37,12 @@
       homeConfigurations."axy" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
+          {
+            system_options = {
+              minimal.enable = true;
+            };
+          }
+          ./system_options
           ./home.nix
           catppuccin.homeManagerModules.catppuccin
           ./sway

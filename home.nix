@@ -13,10 +13,6 @@ let
   };
 in
 {
-  home.username = profile_name;
-  home.homeDirectory = "/home/${profile_name}";
-  home.stateVersion = "24.11";
-
   home.sessionVariables = {
     DEFAULT_BROWSER = pkg_exec "firefox";
   };
@@ -50,22 +46,6 @@ in
     };
   };
 
-  passpass.enable = true;
-
-  nvim.enable = true;
-
-  blesh.enable = true;
-  bash = {
-    enable = true;
-    prompt = {
-      hostname.enable = true;
-      nix.enable = true;
-      pwd.enable = true;
-      git.enable = true;
-    };
-    nix_shell_preserve_prompt = true;
-  };
-
   bsinstaller = {
     enable = true;
     install_path = "$HOME/.steam/steam/steamapps/common/Beat Saber/";
@@ -77,10 +57,6 @@ in
       slurp
       grim
       vesktop
-      neofetch
-      htop
-      zip
-      unzip
       wev
       playerctl
       jetbrains-mono
@@ -88,9 +64,6 @@ in
       prismlauncher
       swaybg
       protontricks
-      unp
-      unrar-free
-      p7zip
       pamixer
       rustc
       cargo
@@ -104,7 +77,6 @@ in
       v4l-utils
       ffmpeg
       mpv
-      flatpak
       wineWowPackages.stable
       noto-fonts
       noto-fonts-cjk-sans
@@ -112,12 +84,7 @@ in
       noto-fonts-color-emoji
       wlx-overlay-s
       telegram-desktop
-      bashmount
-      jq
-      age
       krita
-      xxd
-      bc
       slides
       calcurse
     ])
@@ -139,25 +106,6 @@ in
   fonts.fontconfig.enable = true;
 
   programs = {
-    home-manager.enable = true;
-    git = {
-      enable = true;
-      userName = "Axy";
-      userEmail = "gilliardmarthey.axel@gmail.com";
-    };
-    fzf.enable = true;
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-      silent = true;
-      config.global = {
-        strict_env = true;
-        disable_stdin = true;
-      };
-    };
-    tmux = {
-      enable = true;
-    };
     kitty = {
       enable = true;
       font = {
@@ -189,6 +137,5 @@ in
         };
       };
     };
-    bat.enable = true;
   };
 }
