@@ -40,6 +40,7 @@
           {
             system_options = {
               minimal.enable = true;
+              graphical.enable = true;
             };
           }
           ./system_options
