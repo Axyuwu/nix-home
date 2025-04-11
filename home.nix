@@ -21,15 +21,6 @@ in
     DEFAULT_BROWSER = pkg_exec "firefox";
   };
 
-  imports = [
-    ./sway
-    ./nvim
-    ./bash
-    ./bsinstaller.nix
-    ./passpass
-    ./quickselect.nix
-  ];
-
   catppuccin = {
     enable = true;
     flavor = "macchiato";

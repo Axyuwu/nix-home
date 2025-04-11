@@ -39,6 +39,12 @@
         modules = [
           ./home.nix
           catppuccin.homeManagerModules.catppuccin
+          ./sway
+          ./nvim
+          ./bash
+          ./bsinstaller.nix
+          ./passpass
+          ./quickselect.nix
         ];
       };
     };
