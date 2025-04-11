@@ -41,10 +41,10 @@
             system_options = {
               minimal.enable = true;
               graphical.enable = true;
+              vr.enable = true;
             };
           }
           ./system_options
-          ./home.nix
           catppuccin.homeManagerModules.catppuccin
           ./sway
           ./nvim
