@@ -180,7 +180,7 @@ in
                     order += "time"
 
                     time {
-                      format = "%A %Y-%m-%d %H:%M:%S"
+                      format = "%A %d/%m/%Y %H:%M:%S"
                     }
 
                     battery 0 {
