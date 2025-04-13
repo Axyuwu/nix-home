@@ -15,6 +15,7 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
@@ -23,6 +24,7 @@
       nixpkgs,
       home-manager,
       catppuccin,
+      flake-utils,
       ...
     }:
     let
@@ -43,20 +45,22 @@
           };
         };
       };
-      pkgs = {
-        "x86_64-linux" = import nixpkgs {
-          system = "x86_64-linux";
+      pkgs =
+        system:
+        import nixpkgs {
+          inherit system;
           overlays = [ nur.overlays.default ];
         };
-      };
     in
-    {
-      formatter."x86_64-linux" = pkgs."x86_64-linux".nixfmt-rfc-style;
+    (flake-utils.lib.eachDefaultSystem (system: {
+      formatter = pkgs.legacyPackages.${system}.nixfmt-rfc-style;
+    }))
+    // {
       homeConfigurations = builtins.mapAttrs (
         name:
-        config@{ system, options, ... }:
+        { system, options }:
         home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgs.${system};
+          pkgs = pkgs system;
           modules = [
             {
               system_options = builtins.mapAttrs (_: enable: { inherit enable; }) options;
