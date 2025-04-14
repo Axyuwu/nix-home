@@ -23,12 +23,16 @@ let
       ${age} -d -o $TMP /run/user/$UID/passpass/encrypted.key
 
       mv -f $TMP /run/user/$UID/passpass/decrypted.key
+
+      ${pkgs.systemd}/bin/systemctl --user start passpass-authed.target
     fi
   '';
   passpass-unauth = pkgs.writeShellScriptBin "passpass-unauth" ''
     set -e -u -o pipefail
 
-    rm /run/user/$UID/passpass/decrypted.key
+    ${pkgs.systemd}/bin/systemctl --user stop passpass-authed.target
+
+    rm -f /run/user/$UID/passpass/decrypted.key
   '';
   common-funcs = ''
     set -e -u -o pipefail
@@ -376,6 +380,21 @@ let
       ${git} push ${remote}
     '';
   };
+  passpass-probe-authed = pkgs.writeShellApplication {
+    name = "passpass-prove-authed";
+    runtimeInputs = with pkgs; [
+      systemd
+    ];
+    text = ''
+      set -e -u -o pipefail
+
+      if [[ -e /run/user/$UID/passpass/decrypted.key ]]; then
+        systemctl --user start passpass-authed.target
+      else
+        systemctl --user stop passpass-authed.target
+      fi
+    '';
+  };
 in
 {
   options.passpass = {
@@ -400,32 +419,45 @@ in
         passpass-gen
         passpass-get
       ];
-    systemd.user.services.passpass = {
-      Unit.Description = "passpass activation";
-      Service = {
-        Type = "oneshot";
-        ExecStart = passpass-setup;
-      };
-      Install.WantedBy = [ "default.target" ];
-    };
-    systemd.user.services.passpass-sync = {
-      Unit.Description = "passpass sync";
-      Service = {
-        Type = "oneshot";
-        ExecStart = lib.getExe passpass-sync;
-      };
-      Install.After = [ "passpass.service" ];
-    };
-    systemd.user.timers = {
-      passpass-sync = {
-        Unit.Description = "passpass sync with remote";
-        Timer = {
-          Unit = "passpass-sync";
-          OnBootSec = "5m";
-          OnUnitActiveSec = "5m";
+    systemd.user.services = {
+      passpass = {
+        Unit.Description = "passpass activation";
+        Service = {
+          Type = "oneshot";
+          ExecStart = passpass-setup;
         };
-        Install.WantedBy = [ "timers.target" ];
+        Install.WantedBy = [ "default.target" ];
       };
+      passpass-sync = {
+        Unit.Description = "passpass sync";
+        Service = {
+          Type = "oneshot";
+          ExecStart = lib.getExe passpass-sync;
+        };
+        Install.After = [ "passpass.service" ];
+      };
+      passpass-probe-authed = {
+        Unit = {
+          Description = "passpass probe authed";
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = lib.getExe passpass-probe-authed;
+        };
+        Install.WantedBy = [ "default.target" ];
+      };
+    };
+    systemd.user.targets.passpass-authed.Unit = {
+      Description = "passpass decrypted key available";
+    };
+    systemd.user.timers.passpass-sync = {
+      Unit.Description = "passpass sync with remote";
+      Timer = {
+        Unit = "passpass-sync";
+        OnBootSec = "5m";
+        OnUnitActiveSec = "5m";
+      };
+      Install.WantedBy = [ "timers.target" ];
     };
   };
 }
