@@ -334,38 +334,36 @@ let
     ${git} commit -am "removed secret"
     ${git} push ${remote}
   '';
-  passpass-setup = lib.getExe (
-    pkgs.writeShellApplication {
-      name = "passpass-setup";
-      runtimeInputs = with pkgs; [
-        coreutils-full
-        diffutils
-      ];
-      text = ''
-        set -e -u -o pipefail
+  passpass-setup = pkgs.writeShellApplication {
+    name = "passpass-setup";
+    runtimeInputs = with pkgs; [
+      coreutils-full
+      diffutils
+    ];
+    text = ''
+      set -e -u -o pipefail
 
-        if [[ -d /run/user/$UID/passpass ]]; then
-          chmod 700 /run/user/$UID/passpass
-        else
-          mkdir -m 700 /run/user/$UID/passpass
-        fi
-          
-        if ! cmp -s /run/user/$UID/passpass/encrypted.key ${key.private}; then
-          ln -s ${key.private} /run/user/$UID/passpass/encrypted.key
-          rm -f /run/user/$UID/passpass/decrypted.key
-        fi
+      if [[ -d /run/user/$UID/passpass ]]; then
+        chmod 700 /run/user/$UID/passpass
+      else
+        mkdir -m 700 /run/user/$UID/passpass
+      fi
+        
+      if ! cmp -s /run/user/$UID/passpass/encrypted.key ${key.private}; then
+        ln -s ${key.private} /run/user/$UID/passpass/encrypted.key
+        rm -f /run/user/$UID/passpass/decrypted.key
+      fi
 
-        mkdir -p ${local}/store
+      mkdir -p ${local}/store
 
-        cd ${local}/store
+      cd ${local}/store
 
-        ${git} init -b main
+      ${git} init -b main
 
-        ${git} remote add origin ${remote} \
-        || ${git} remote set-url origin ${remote}
-      '';
-    }
-  );
+      ${git} remote add origin ${remote} \
+      || ${git} remote set-url origin ${remote}
+    '';
+  };
   passpass-sync = pkgs.writeShellApplication {
     name = "passpass-sync";
     runtimeInputs = with pkgs; [
@@ -424,7 +422,7 @@ in
         Unit.Description = "passpass activation";
         Service = {
           Type = "oneshot";
-          ExecStart = passpass-setup;
+          ExecStart = lib.getExe passpass-setup;
         };
         Install.WantedBy = [ "default.target" ];
       };
