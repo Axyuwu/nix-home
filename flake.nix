@@ -44,6 +44,12 @@
             graphical = true;
           };
         };
+        ruthenium = {
+          system = "x86_64-linux";
+          options = {
+            minimal = true;
+          };
+        };
       };
       pkgs =
         system:
