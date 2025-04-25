@@ -89,7 +89,6 @@ in
         [
           steam
           steam.run
-          pkgs.gamescope
         ]
       );
 
