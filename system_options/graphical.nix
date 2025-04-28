@@ -40,6 +40,7 @@ in
         "Calcurse" = "kitty calcurse";
         "Steam" = "steam";
         "Prism Launcher" = "prismlauncher";
+        "OBS" = "obs";
       };
     };
 
@@ -136,7 +137,9 @@ in
           };
         };
       };
+      obs-studio = {
+        enable = true;
+      };
     };
-
   };
 }
