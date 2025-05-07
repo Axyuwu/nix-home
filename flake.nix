@@ -72,7 +72,8 @@
               system_options = builtins.mapAttrs (_: enable: { inherit enable; }) options;
             }
             ./system_options
-            catppuccin.homeManagerModules.catppuccin
+            catppuccin.homeModules.catppuccin
+            { catppuccin.mako.enable = false; } # Fix, broken because of catpuccin
             ./sway
             ./nvim
             ./bash
