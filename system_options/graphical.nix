@@ -41,6 +41,7 @@ in
         "Steam" = "steam";
         "Prism Launcher" = "prismlauncher";
         "OBS" = "obs";
+        "Kwave" = "kwave";
       };
     };
 
@@ -80,6 +81,7 @@ in
         krita
         slides
         calcurse
+        kdePackages.kwave
       ])
       ++ (
         let
