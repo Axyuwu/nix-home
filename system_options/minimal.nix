@@ -50,7 +50,7 @@ in
       git = {
         enable = true;
         userName = "Axy";
-        userEmail = "axsparta25@gmail.com";
+        userEmail = "gilliardmarthey.axel@gmail.com";
       };
       fzf.enable = true;
       direnv = {
