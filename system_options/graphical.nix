@@ -31,7 +31,7 @@ in
         "Kitty" = "kitty";
         "Neovim" = "kitty nvim";
         "Firefox" = "firefox";
-        "Discord" = "vesktop";
+        "Discord" = "discord";
         "Gimp" = "gimp";
         "Pavucontrol" = "pavucontrol";
         "Droidcam" = "droidcam";
@@ -52,7 +52,7 @@ in
         wl-clipboard
         slurp
         grim
-        vesktop
+        discord
         wev
         playerctl
         jetbrains-mono
@@ -102,6 +102,7 @@ in
           "steam"
           "steam-unwrapped"
           "steam-run"
+          "discord"
         ];
     };
 
