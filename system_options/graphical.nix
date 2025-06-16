@@ -42,6 +42,7 @@ in
         "Prism Launcher" = "prismlauncher";
         "OBS" = "obs";
         "Kwave" = "kwave";
+        "GPU Screen Recorder" = "gpu-screen-recorder-gtk";
       };
     };
 
@@ -82,6 +83,8 @@ in
         slides
         calcurse
         kdePackages.kwave
+        gpu-screen-recorder
+        gpu-screen-recorder-gtk
       ])
       ++ (
         let
