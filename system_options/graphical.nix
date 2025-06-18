@@ -43,6 +43,7 @@ in
         "OBS" = "obs";
         "Kwave" = "kwave";
         "GPU Screen Recorder" = "gpu-screen-recorder-gtk";
+        "Thunderbird" = "thunderbird";
       };
     };
 
@@ -85,6 +86,7 @@ in
         kdePackages.kwave
         gpu-screen-recorder
         gpu-screen-recorder-gtk
+        thunderbird
       ])
       ++ (
         let
