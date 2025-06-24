@@ -107,7 +107,6 @@ in
           "steam"
           "steam-unwrapped"
           "steam-run"
-          "discord"
         ];
     };
 
