@@ -225,7 +225,6 @@ let
           echo "$SECRET"
           echo "$SEARCH"
           VALUE=$(${field.generator})
-          echo "test"
           SECRET+=${lib.escapeShellArg "\n${field.name}: "} 
           SECRET+="$VALUE"
           echo "${field.display} copied to clipboard 1/2"

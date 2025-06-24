@@ -31,7 +31,7 @@ in
         "Kitty" = "kitty";
         "Neovim" = "kitty nvim";
         "Firefox" = "firefox";
-        "Discord" = "discord";
+        "Discord" = "vesktop";
         "Gimp" = "gimp";
         "Pavucontrol" = "pavucontrol";
         "Droidcam" = "droidcam";
@@ -54,7 +54,7 @@ in
         wl-clipboard
         slurp
         grim
-        discord
+        vesktop
         wev
         playerctl
         jetbrains-mono
