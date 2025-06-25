@@ -87,6 +87,8 @@ in
         gpu-screen-recorder
         gpu-screen-recorder-gtk
         thunderbird
+        feh
+        yt-dlp
       ])
       ++ (
         let
