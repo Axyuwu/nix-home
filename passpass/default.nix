@@ -124,61 +124,55 @@ let
 
     cat "''${SECRETS[$INDEX]}"/value | secure_decrypt
   '';
-  passpass-schemas =
-    builtins.mapAttrs
-      (
-        _name: schema:
-        builtins.map
-          (
-            field:
-            {
-              required = false;
-              search = true;
-              value = true;
-            }
-            // field
-            // (
-              if builtins.hasAttr "generator" field then
-                {
-                  required = true;
-                  search = false;
-                  value = true;
-                }
-              else
-                { }
-            )
-          )
-          (
-            lib.lists.singleton {
-              display = "Resource";
-              required = true;
-              search = true;
-              value = false;
-            }
-            ++ schema
-          )
-      )
+  passpass-schemas = {
+    account = [
       {
-        account = [
+        display = "Resource";
+        search = true;
+        generator = ''
+          response=""
+          while true; do
+            read -r -p "Resource: " response </dev/tty
+            [[ -z "$response" ]] || break
+            echo "Please provide an answer" >/dev/tty
+          done
+          echo "$response"
+        '';
+      }
+      {
+        header = "email";
+        display = "EMail";
+        search = true;
+        generator = ''
+          read -r -p "EMail (Optional): " response </dev/tty
+          echo "$response"
+        '';
+      }
+      {
+        header = "username";
+        display = "Username";
+        search = true;
+        generator = ''
+          read -r -p "Username (Optional): " response </dev/tty
+          echo "$response"
+        '';
+      }
+      {
+        header = "password";
+        display = "Password";
+        search = false;
+        generator = ''
           {
-            name = "email";
-            display = "EMail";
-          }
-          {
-            name = "username";
-            display = "Username";
-          }
-          {
-            name = "password";
-            display = "Password";
-            generator = "head -c 24 <(tr -cd [:graph:] < /dev/random)";
-          }
-        ];
-      };
-  map-gen-apply = (
-    fnogen: fgen: field:
-    if builtins.hasAttr "generator" field then fgen field else fnogen field
-  );
+            PASSWORD=$(head -c 24 <(tr -cd [:graph:] < /dev/random))
+            echo "Password copied to clipboard 1/2"
+            echo -n "$PASSWORD" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
+            echo "Password copied to clipboard 2/2"
+            echo -n "$PASSWORD" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
+          } >/dev/tty
+        '';
+      }
+    ];
+  };
   schema-to-gen =
     name: schema:
     pkgs.writeShellScript "passpass-gen-${name}" ''
@@ -187,55 +181,26 @@ let
       SECRET=${lib.escapeShellArg "type: ${name}"}
       SEARCH="";
 
-      ${lib.strings.concatMapStringsSep "\n" (map-gen-apply
-        (field: ''
-          read -r -p \
-            ${
-              lib.escapeShellArg (
-                lib.concatStrings [
-                  field.display
-                  (lib.strings.optionalString (!(field.required)) " (Optional)")
-                  ": "
-                ]
-              )
-            } \
-            VALUE
+      ${lib.strings.concatMapStringsSep "\n" (field: ''
+        VALUE=$(${field.generator})
 
-          ${lib.strings.optionalString field.required ''
-            if [[ -z "$VALUE" ]]; then
-              echo ${lib.escapeShellArg field.display} required
-              exit 1
-            fi
-          ''}
-
-          ${lib.strings.optionalString field.value ''
-            SECRET+=${lib.escapeShellArg "\n${field.name}: "} 
-            SECRET+="$VALUE"
-          ''}
-          ${lib.strings.optionalString field.search ''
-            if [[ -n "$VALUE" ]]; then
-              if [[ "$SEARCH" != "" ]]; then
-                SEARCH+=" : "
-              fi
-              SEARCH+="$VALUE"
-            fi
-          ''}
-        '')
-        (field: ''
-          echo "$SECRET"
-          echo "$SEARCH"
-          VALUE=$(${field.generator})
-          SECRET+=${lib.escapeShellArg "\n${field.name}: "} 
+        ${lib.strings.optionalString (builtins.hasAttr "header" field) ''
+          SECRET+=${lib.escapeShellArg "\n${field.header}: "} 
           SECRET+="$VALUE"
-          echo "${field.display} copied to clipboard 1/2"
-          ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
-          echo "${field.display} copied to clipboard 2/2"
-          ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$VALUE"
-        '')
-      ) schema}
+        ''}
+
+        ${lib.strings.optionalString field.search ''
+          if [[ -n "$VALUE" ]]; then
+            if [[ "$SEARCH" != "" ]]; then
+              SEARCH+=" : "
+            fi
+            SEARCH+="$VALUE"
+          fi
+        ''}
+      '') schema}
 
       echo -n "$SECRET" \
-        | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH"
+      | ${passpass-encrypt}/bin/passpass-encrypt "$SEARCH"
     '';
   passpass-gen =
     let
@@ -265,22 +230,22 @@ let
       IDX=0
 
       ${lib.strings.concatMapStringsSep "\n" (schema: ''
-        [[ ''${SECRETS[IDX]} == ${lib.escapeShellArg "${schema.name}: "}* ]] \
+        [[ ''${SECRETS[IDX]} == ${lib.escapeShellArg "${schema.header}: "}* ]] \
           || (
             echo  "Invalid line in secret, expected line starting with header:"
-            echo ${lib.escapeShellArg "  ${schema.name}: "}
+            echo ${lib.escapeShellArg "  ${schema.header}: "}
             echo "Current line: $IDX"
             exit 1
           )
 
-        SECRET="''${SECRETS[IDX]#${lib.escapeShellArg "${schema.name}: "}}"
+        SECRET="''${SECRETS[IDX]#${lib.escapeShellArg "${schema.header}: "}}"
         if [[ -n "$SECRET" ]]; then
           echo ${lib.escapeShellArg "${schema.display} copied to clipboard"}
-          ${pkgs.wl-clipboard}/bin/wl-copy -o -f "$SECRET"
+          echo "$SECRET" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
         fi
 
         ((IDX+=1))
-      '') (builtins.filter (schema: schema.value) schema)}
+      '') (builtins.filter (schema: builtins.hasAttr "header" schema) schema)}
     '';
   passpass-get = pkgs.writeShellScriptBin "passpass-get" ''
     set -e -u -o pipefail
@@ -338,6 +303,7 @@ let
     runtimeInputs = with pkgs; [
       coreutils-full
       diffutils
+      systemd
     ];
     text = ''
       set -e -u -o pipefail
@@ -361,6 +327,12 @@ let
 
       ${git} remote add origin ${remote} \
       || ${git} remote set-url origin ${remote}
+
+      if [[ -e /run/user/$UID/passpass/decrypted.key ]]; then
+        systemctl --user start passpass-authed.target
+      else
+        systemctl --user stop passpass-authed.target
+      fi
     '';
   };
   passpass-sync = pkgs.writeShellApplication {
@@ -375,21 +347,6 @@ let
 
       ${git} pull ${remote}
       ${git} push ${remote}
-    '';
-  };
-  passpass-probe-authed = pkgs.writeShellApplication {
-    name = "passpass-prove-authed";
-    runtimeInputs = with pkgs; [
-      systemd
-    ];
-    text = ''
-      set -e -u -o pipefail
-
-      if [[ -e /run/user/$UID/passpass/decrypted.key ]]; then
-        systemctl --user start passpass-authed.target
-      else
-        systemctl --user stop passpass-authed.target
-      fi
     '';
   };
 in
@@ -422,26 +379,19 @@ in
         Service = {
           Type = "oneshot";
           ExecStart = lib.getExe passpass-setup;
+          RemainAfterExit = "yes";
         };
         Install.WantedBy = [ "default.target" ];
       };
       passpass-sync = {
-        Unit.Description = "passpass sync";
+        Unit = {
+          Description = "passpass sync";
+          After = [ "passpass.service" ];
+        };
         Service = {
           Type = "oneshot";
           ExecStart = lib.getExe passpass-sync;
         };
-        Install.After = [ "passpass.service" ];
-      };
-      passpass-probe-authed = {
-        Unit = {
-          Description = "passpass probe authed";
-        };
-        Service = {
-          Type = "oneshot";
-          ExecStart = lib.getExe passpass-probe-authed;
-        };
-        Install.WantedBy = [ "default.target" ];
       };
     };
     systemd.user.targets.passpass-authed.Unit = {
@@ -450,7 +400,7 @@ in
     systemd.user.timers.passpass-sync = {
       Unit.Description = "passpass sync with remote";
       Timer = {
-        Unit = "passpass-sync";
+        Unit = "passpass-sync.unit";
         OnBootSec = "5m";
         OnUnitActiveSec = "5m";
       };
