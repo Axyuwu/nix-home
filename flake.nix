@@ -73,7 +73,6 @@
             }
             ./system_options
             catppuccin.homeModules.catppuccin
-            { catppuccin.mako.enable = false; } # Fix, broken because of catpuccin
             ./sway
             ./nvim
             ./bash
