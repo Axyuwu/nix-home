@@ -137,11 +137,18 @@ in
         enable = true;
         profiles.${config.home.username} = {
           isDefault = true;
+          search = {
+            force = true;
+            default = "ddg";
+            privateDefault = "ddg";
+          };
           extensions = {
+            force = true;
             packages = with pkgs.nur.repos.rycee.firefox-addons; [
               ublock-origin
               privacy-badger
               sponsorblock
+              youtube-shorts-block
             ];
           };
         };
