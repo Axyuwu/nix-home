@@ -15,10 +15,7 @@ in
       DEFAULT_BROWSER = "firefox";
     };
 
-    sway = {
-      enable = true;
-      terminal = "kitty";
-    };
+    sway.enable = true;
 
     catppuccin = {
       enable = true;
@@ -89,6 +86,8 @@ in
         thunderbird
         feh
         yt-dlp
+        dconf
+        libnotify
       ])
       ++ (
         let
@@ -113,6 +112,16 @@ in
     };
 
     fonts.fontconfig.enable = true;
+
+    gtk = {
+      enable = true;
+    };
+
+    services = {
+      swaync = {
+        enable = true;
+      };
+    };
 
     programs = {
       kitty = {

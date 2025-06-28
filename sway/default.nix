@@ -7,12 +7,10 @@
 
 let
   cfg = config.sway;
-  pkg_bin = pkg: file: "${pkgs.${pkg}}/bin/${file}";
-  pkg_exec = pkg: pkg_bin pkg pkg;
   terminal-open =
     { title, bin }:
     pkgs.writeShellScript "terminal_open" ''
-      ${pkgs.kitty}/bin/kitty \
+      kitty \
       --title ${lib.escapeShellArg title} \
       -o remember_window_size=no \
       -o initial_window_width=56c \
@@ -28,25 +26,10 @@ in
       description = "Sway package to use";
       default = pkgs.swayfx;
     };
-    quickselect_config = mkOption {
-      type = types.attrsOf types.str;
-      description = "Attribute set defininig quickselect options for the keybind";
-      default = { };
-    };
-    startup = mkOption {
-      type = types.listOf types.str;
-      description = "List of commands to run on startup";
-      default = [ ];
-    };
-    terminal = mkOption {
-      type = types.str;
-      description = "Terminal used";
-    };
   };
   config = lib.mkIf cfg.enable {
     wayland.windowManager.sway =
       let
-        cfg = config.sway;
         left = "h";
         down = "j";
         up = "k";
@@ -58,17 +41,21 @@ in
         systemd.enable = true;
         config = {
           modifier = modifier;
-          terminal = "${cfg.terminal}";
+          terminal = "kitty";
           startup = [
             {
-              command = "${pkg_bin "kanshi" "kanshictl"} reload";
+              command = "kanshictl reload";
               always = true;
             }
             {
-              command = "${pkg_exec "swaybg"} -i ${./wallpapers/rainbow-cat.png}";
+              command = "swaybg -i ${./wallpapers/rainbow-cat.png}";
               always = true;
             }
-          ] ++ (builtins.map (e: { command = e; }) cfg.startup);
+            {
+              command = "swaync";
+              always = true;
+            }
+          ];
           input = {
             "type:keyboard" = {
               xkb_layout = "fr";
@@ -95,17 +82,16 @@ in
                 bin = "quickselect";
               }
             }";
-            "${modifier}+Shift+i" = "exec ${cfg.terminal}";
+            "${modifier}+Shift+i" = "exec kitty";
             "${modifier}+x" = "kill";
-            "${modifier}+Shift+s" =
-              "exec ${pkg_exec "slurp"} | ${pkg_exec "grim"} -g - - | ${pkg_bin "wl-clipboard" "wl-copy"}";
+            "${modifier}+Shift+s" = "exec slurp | grim -g - - | wl-copy";
             "${modifier}+s" = "split toggle";
             "${modifier}+d" = "focus parent";
             "${modifier}+Shift+q" = ''
-              exec ${cfg.pkg}/bin/swaynag \
+              exec swaynag \
                 -t warning \
                 -m 'Do you really want to exit sway?' \
-                -b 'Yes' '${cfg.pkg}/bin/swaymsg exit'
+                -b 'Yes' 'swaymsg exit'
             '';
             "${modifier}+Shift+r" = "reload";
             "${modifier}+p" = "exec ${
@@ -120,14 +106,15 @@ in
                 bin = "passpass-gen";
               }
             }";
-            "${modifier}+c" = "exec ${pkgs.wl-clipboard}/bin/wl-copy -c";
-            "XF86AudioPlay" = "exec ${pkg_exec "playerctl"} play-pause";
-            "XF86AudioMute" = "exec ${pkg_exec "pamixer"} -t";
-            "XF86AudioLowerVolume" = "exec ${pkg_exec "pamixer"} -d 5";
-            "XF86AudioRaiseVolume" = "exec ${pkg_exec "pamixer"} -i 5";
-            "XF86MonBrightnessDown" = "exec ${pkg_exec "brightnessctl"} set 5%-";
-            "XF86MonBrightnessUp" = "exec ${pkg_exec "brightnessctl"} set 5%+";
-            "XF86AudioMicMute" = "exec ${pkg_exec "pamixer"} --default-sink -t";
+            "${modifier}+c" = "exec wl-copy -c";
+            "${modifier}+n" = "exec swaync-client -t";
+            "XF86AudioPlay" = "exec playerctl play-pause";
+            "XF86AudioMute" = "exec pamixer -t";
+            "XF86AudioLowerVolume" = "exec pamixer -d 5";
+            "XF86AudioRaiseVolume" = "exec pamixer -i 5";
+            "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
+            "XF86MonBrightnessUp" = "exec brightnessctl set 5%+";
+            "XF86AudioMicMute" = "exec pamixer --default-sink -t";
           };
 
           /*
@@ -249,7 +236,7 @@ in
         extraConfig = ''
           default_dim_inactive 0.1
         '';
-        package = cfg.pkg;
+        package = pkgs.swayfx;
         checkConfig = false;
       };
 
@@ -259,8 +246,8 @@ in
         timeouts = [
           {
             timeout = 60;
-            command = ''${cfg.pkg}/bin/swaymsg "output * power off"'';
-            resumeCommand = ''${cfg.pkg}/bin/swaymsg "output * power on"'';
+            command = "swaymsg 'output * power off'";
+            resumeCommand = "swaymsg 'output * power on'";
           }
         ];
       };

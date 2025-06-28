@@ -30,7 +30,7 @@ in
 
         PROGRAM="$(ls -A "$DIR" | ${pkgs.fzf}/bin/fzf)"
         REAL_PATH="$(readlink "$DIR/$PROGRAM")"
-        ${pkgs.swayfx}/bin/swaymsg exec $REAL_PATH
+        swaymsg exec "$REAL_PATH"
       '')
     ];
     home.file.".config/quickselect/programs".source = pkgs.runCommand "quickselect_mkconfig" { } ''
