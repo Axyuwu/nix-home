@@ -51,10 +51,6 @@ in
               command = "swaybg -i ${./wallpapers/rainbow-cat.png}";
               always = true;
             }
-            {
-              command = "swaync";
-              always = true;
-            }
           ];
           input = {
             "type:keyboard" = {
