@@ -151,35 +151,7 @@ in
                   inactiveWorkspace = mkTarget "$base" "$text";
                   urgentWorkspace = mkTarget "$peach" "$crust";
                 };
-              statusCommand =
-                let
-                  config = pkgs.writeText "i3status_config" ''
-                    general {
-                      colors = true
-                      interval = 1
-                    }
-
-                    order += "battery 0"
-                    order += "time"
-
-                    time {
-                      format = "%A %d/%m/%Y %H:%M:%S"
-                    }
-
-                    battery 0 {
-                      format = "%status %percentage |"
-                      format_down = ""
-                      status_chr = "⚡"
-                      status_bat = "🔋"
-                      status_unk = "?"
-                      status_full = "☻ "
-                      status_idle = "☻ "
-                      path = "/sys/class/power_supply/BAT%d/uevent"
-                      low_threshold = 10
-                    }
-                  '';
-                in
-                "${pkgs.i3status}/bin/i3status -c ${config}";
+              statusCommand = "i3status-rs config-default.toml";
             }
           ];
 
@@ -235,6 +207,36 @@ in
         package = pkgs.swayfx;
         checkConfig = false;
       };
+    programs.i3status-rust = {
+      enable = true;
+      bars.default = {
+        theme = "ctp-macchiato";
+        icons = "material-nf";
+        blocks = lib.mkForce [
+          {
+            block = "notify";
+            driver = "swaync";
+            format = " $icon {($notification_count.eng(w:1)) |}";
+            click = [
+              {
+                button = "left";
+                action = "show";
+              }
+            ];
+          }
+          {
+            block = "battery";
+            format = " $icon $percentage% ";
+            missing_format = "";
+          }
+          {
+            block = "time";
+            interval = 1;
+            format = " $icon $timestamp.datetime(f:'%A %d/%m/%Y %T') ";
+          }
+        ];
+      };
+    };
 
     /*
       services.swayidle = {
