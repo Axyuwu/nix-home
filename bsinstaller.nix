@@ -68,7 +68,7 @@ let
 
     printf "\nDecompressing archive\n\n"
 
-    ${pkgs.unzip}/bin/unzip -n "$zip" -d "${cfg.install_path}/Beat Saber_Data/CustomLevels/$(basename "$filename" .zip)"
+    ${pkgs.unzip}/bin/unzip -DD -n "$zip" -d "${cfg.install_path}/Beat Saber_Data/CustomLevels/$(basename "$filename" .zip)"
 
     rm $zip
   '';
