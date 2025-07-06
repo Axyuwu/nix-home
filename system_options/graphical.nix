@@ -58,6 +58,7 @@ in
         xdg-utils
         swaybg
         pamixer
+        brightnessctl
         prismlauncher
         protontricks
         rustc
