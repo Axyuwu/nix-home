@@ -32,7 +32,7 @@ in
         "Gimp" = "gimp";
         "Pavucontrol" = "pavucontrol";
         "Droidcam" = "droidcam";
-        "Telegram" = "telegram-desktop";
+        "Telegram" = "Telegram";
         "Krita" = "krita";
         "Calcurse" = "kitty calcurse";
         "Steam" = "steam";

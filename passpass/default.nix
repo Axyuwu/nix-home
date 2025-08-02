@@ -162,13 +162,14 @@ let
         display = "Password";
         search = false;
         generator = ''
+          PASSWORD=$(head -c 24 <(tr -cd [:graph:] < /dev/random))
           {
-            PASSWORD=$(head -c 24 <(tr -cd [:graph:] < /dev/random))
             echo "Password copied to clipboard 1/2"
             echo -n "$PASSWORD" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
             echo "Password copied to clipboard 2/2"
             echo -n "$PASSWORD" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
           } >/dev/tty
+          echo "$PASSWORD" 
         '';
       }
     ];
