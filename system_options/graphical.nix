@@ -41,6 +41,7 @@ in
         "Kwave" = "kwave";
         "GPU Screen Recorder" = "gpu-screen-recorder-gtk";
         "Thunderbird" = "thunderbird";
+        "Video trimmer" = "video-trimmer";
       };
     };
 
@@ -89,6 +90,7 @@ in
         yt-dlp
         dconf
         libnotify
+        video-trimmer
       ])
       ++ (
         let
