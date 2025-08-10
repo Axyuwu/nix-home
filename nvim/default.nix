@@ -20,6 +20,8 @@ in
   config.programs.neovim = lib.mkIf cfg.enable {
     enable = true;
     package = cfg.package;
+    vimAlias = true;
+    viAlias = true;
     defaultEditor = true;
     extraLuaConfig = builtins.readFile ./init.lua;
     plugins = with pkgs.vimPlugins; [

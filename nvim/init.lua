@@ -26,6 +26,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.smarttab = true
+vim.opt.mouse = nil
 
 local wk = require 'which-key'
 wk.setup {}
