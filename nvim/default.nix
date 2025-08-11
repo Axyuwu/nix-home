@@ -43,7 +43,6 @@ in
   config.home.packages = with pkgs; [
     nixd
     rust-analyzer
-    rustfmt
     fzf
     lua-language-server
     nixfmt-rfc-style

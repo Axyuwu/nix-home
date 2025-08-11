@@ -16,6 +16,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -25,6 +29,7 @@
       home-manager,
       catppuccin,
       flake-utils,
+      rust-overlay,
       ...
     }:
     let
@@ -68,9 +73,8 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = pkgs system;
           modules = [
-            {
-              system_options = builtins.mapAttrs (_: enable: { inherit enable; }) options;
-            }
+            { nixpkgs.overlays = [ rust-overlay.overlays.default ]; }
+            { system_options = builtins.mapAttrs (_: enable: { inherit enable; }) options; }
             ./system_options
             catppuccin.homeModules.catppuccin
             ./sway

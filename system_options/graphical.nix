@@ -62,8 +62,7 @@ in
         brightnessctl
         prismlauncher
         protontricks
-        rustc
-        cargo
+        rust-bin.stable.latest.default
         gcc
         gimp
         pulseaudio
