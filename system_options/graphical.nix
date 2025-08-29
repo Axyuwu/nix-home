@@ -42,6 +42,7 @@ in
         "GPU Screen Recorder" = "gpu-screen-recorder-gtk";
         "Thunderbird" = "thunderbird";
         "Video trimmer" = "video-trimmer";
+        "Wdisplays" = "wdisplays";
       };
     };
 
@@ -90,6 +91,7 @@ in
         dconf
         libnotify
         video-trimmer
+        wdisplays
       ])
       ++ (
         let
@@ -142,6 +144,10 @@ in
           "f1" = "launch --cwd=current --type=os-window --copy-env";
           "kitty_mod+c" = "copy_to_clipboard";
           "kitty_mod+v" = "paste_from_clipboard";
+          "kitty_mod+plus" = "change_font_size current +2.0";
+          "kitty_mod+equal" = "change_font_size current +2.0";
+          "kitty_mod+minus" = "change_font_size current -2.0";
+          "kitty_mod+backspace" = "change_font_size current 0";
         };
       };
       firefox = {
