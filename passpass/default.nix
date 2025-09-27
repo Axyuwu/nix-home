@@ -162,7 +162,7 @@ let
         display = "Password";
         search = false;
         generator = ''
-          PASSWORD=$(head -c 24 <(tr -cd [:graph:] < /dev/random))
+          PASSWORD=$(head -c 24 <(tr -cd '[:alnum:]?!,.@;:' < /dev/random))
           {
             echo "Password copied to clipboard 1/2"
             echo -n "$PASSWORD" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
@@ -361,19 +361,18 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    home.packages =
-      [
-        passpass-auth
-        passpass-unauth
-        passpass-encrypt
-        passpass-decrypt
-        passpass-remove
-        passpass-sync
-      ]
-      ++ lib.lists.optionals cfg.graphical [
-        passpass-gen
-        passpass-get
-      ];
+    home.packages = [
+      passpass-auth
+      passpass-unauth
+      passpass-encrypt
+      passpass-decrypt
+      passpass-remove
+      passpass-sync
+    ]
+    ++ lib.lists.optionals cfg.graphical [
+      passpass-gen
+      passpass-get
+    ];
     systemd.user.services = {
       passpass = {
         Unit.Description = "passpass activation";
