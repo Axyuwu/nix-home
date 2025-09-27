@@ -166,6 +166,7 @@ in
               privacy-badger
               sponsorblock
               youtube-shorts-block
+              don-t-fuck-with-paste
             ];
           };
         };
