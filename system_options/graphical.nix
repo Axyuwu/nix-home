@@ -92,6 +92,7 @@ in
         libnotify
         video-trimmer
         wdisplays
+        gamescope
       ])
       ++ (
         let

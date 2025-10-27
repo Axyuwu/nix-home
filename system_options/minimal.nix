@@ -27,6 +27,7 @@ in
       age
       xxd
       bc
+      gcr
     ];
 
     passpass.enable = true;
@@ -43,6 +44,11 @@ in
         git.enable = true;
       };
       nix_shell_preserve_prompt = true;
+    };
+
+    services.gpg-agent = {
+      enable = true;
+      pinentry.package = pkgs.pinentry-curses;
     };
 
     programs = {
@@ -66,6 +72,7 @@ in
         enable = true;
       };
       bat.enable = true;
+      gpg.enable = true;
     };
   };
 }
