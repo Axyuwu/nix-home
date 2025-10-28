@@ -135,7 +135,9 @@ lspformat.setup {}
 local on_attach = lspformat.on_attach
 
 local lspconfig = require 'lspconfig'
-lspconfig.nixd.setup {
+
+vim.lsp.enable('nixd')
+vim.lsp.config('nixd', {
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
@@ -143,12 +145,14 @@ lspconfig.nixd.setup {
             command = { "nixfmt" },
         },
     },
-}
-lspconfig.rust_analyzer.setup {
+})
+vim.lsp.enable('rust_analyzer')
+vim.lsp.config('rust_analyzer', {
     on_attach = on_attach,
     capabilities = capabilities,
-}
-lspconfig.lua_ls.setup {
+})
+vim.lsp.enable('lua_ls')
+vim.lsp.config('lua_ls', {
     on_attach = on_attach,
     capabilities = capabilities,
     on_init = function(client)
@@ -184,4 +188,4 @@ lspconfig.lua_ls.setup {
             }
         }
     }
-}
+})
