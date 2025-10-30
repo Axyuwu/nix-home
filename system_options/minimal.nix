@@ -28,6 +28,8 @@ in
       xxd
       bc
       gcr
+      gnumake
+      norminette
     ];
 
     passpass.enable = true;
