@@ -134,7 +134,7 @@ local lspformat = require 'lsp-format'
 lspformat.setup {}
 local on_attach = lspformat.on_attach
 
-local lspconfig = require 'lspconfig'
+require 'lspconfig'
 
 vim.lsp.enable('nixd')
 vim.lsp.config('nixd', {
@@ -189,3 +189,10 @@ vim.lsp.config('lua_ls', {
         }
     }
 })
+
+local ft_header = require '42header'
+ft_header.setup {
+    auto_update = true,
+    user = "agilliar",
+    mail = "agilliar@student.42mulhouse.fr",
+}
