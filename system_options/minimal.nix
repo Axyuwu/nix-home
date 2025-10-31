@@ -12,7 +12,7 @@ let
   homeupdate = pkgs.writeShellApplication {
     name = "homeupdate";
     text = ''
-      home-manager switch --option tarball-ttl 0 --flake ${repo_uri}#${flake_output_name}
+      home-manager switch --flake ${repo_uri}#${flake_output_name}
     '';
   };
 in
