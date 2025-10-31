@@ -6,9 +6,28 @@
 }:
 let
   cfg = config.system_options.minimal;
-  profile_name = "axy";
+  profile_name = config.system_options.profile_name;
+  repo_uri = "github:Axyuwu/nix-home";
+  flake_output_name = config.system_options.flake_output_name;
+  homeupdate = pkgs.writeShellApplication {
+    name = "homeupdate";
+    text = ''
+      home-manager switch --option tarball-ttl 0 --flake ${repo_uri}#${flake_output_name}
+    '';
+  };
 in
 {
+  options.system_options.profile_name = lib.options.mkOption {
+    default = "axy";
+    type = lib.types.str;
+  };
+  options.system_options.flake_output_name = lib.options.mkOption {
+    type = lib.types.str;
+  };
+  options.system_options.ssh_trusted = lib.options.mkOption {
+    default = true;
+    type = lib.types.bool;
+  };
   options.system_options.minimal.enable = lib.options.mkEnableOption "Minimal configuration";
   config = lib.mkIf cfg.enable {
     home.username = profile_name;
@@ -30,9 +49,10 @@ in
       gcr
       gnumake
       norminette
+      homeupdate
     ];
 
-    passpass.enable = true;
+    passpass.enable = config.system_options.ssh_trusted;
 
     nvim.enable = true;
 

@@ -37,22 +37,32 @@
         helium = {
           system = "x86_64-linux";
           options = {
-            minimal = true;
-            graphical = true;
-            vr = true;
+
+            minimal.enable = true;
+            graphical.enable = true;
+            vr.enable = true;
           };
         };
         neon = {
           system = "x86_64-linux";
           options = {
-            minimal = true;
-            graphical = true;
+            minimal.enable = true;
+            graphical.enable = true;
           };
         };
         ruthenium = {
           system = "x86_64-linux";
           options = {
-            minimal = true;
+            minimal.enable = true;
+            ssh_trusted = false;
+          };
+        };
+        ruthenium-agilliar = {
+          system = "x86_64-linux";
+          options = {
+            minimal.enable = true;
+            profile_name = "agilliar";
+            ssh_trusted = false;
           };
         };
       };
@@ -74,7 +84,11 @@
           pkgs = pkgs system;
           modules = [
             { nixpkgs.overlays = [ rust-overlay.overlays.default ]; }
-            { system_options = builtins.mapAttrs (_: enable: { inherit enable; }) options; }
+            {
+              system_options = options // {
+                flake_output_name = name;
+              };
+            }
             ./system_options
             catppuccin.homeModules.catppuccin
             ./sway
