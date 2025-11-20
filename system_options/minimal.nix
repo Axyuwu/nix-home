@@ -53,7 +53,6 @@ in
       lldb
       gdb
       nasm
-      clang
     ];
 
     passpass.enable = config.system_options.ssh_trusted;
