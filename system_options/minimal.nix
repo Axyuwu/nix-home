@@ -50,6 +50,10 @@ in
       gnumake
       norminette
       homeupdate
+      lldb
+      gdb
+      nasm
+      clang
     ];
 
     passpass.enable = config.system_options.ssh_trusted;
@@ -95,6 +99,7 @@ in
       };
       bat.enable = true;
       gpg.enable = true;
+      gcc.enable = true;
     };
   };
 }
