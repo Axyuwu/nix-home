@@ -63,8 +63,6 @@ in
         brightnessctl
         prismlauncher
         protontricks
-        rust-bin.stable.latest.default
-        gcc
         gimp
         pulseaudio
         pavucontrol

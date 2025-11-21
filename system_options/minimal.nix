@@ -47,17 +47,15 @@ in
       xxd
       bc
       gcr
-      gnumake
-      norminette
       homeupdate
-      lldb
-      gdb
-      nasm
     ];
 
-    passpass.enable = config.system_options.ssh_trusted;
+    catppuccin = {
+      enable = true;
+      flavor = "macchiato";
+    };
 
-    nvim.enable = true;
+    passpass.enable = config.system_options.ssh_trusted;
 
     blesh.enable = true;
     bash = {
@@ -100,7 +98,7 @@ in
       };
       bat.enable = true;
       gpg.enable = true;
-      gcc.enable = true;
+      neovim.enable = true;
     };
   };
 }

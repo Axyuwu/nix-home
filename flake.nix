@@ -37,9 +37,9 @@
         helium = {
           system = "x86_64-linux";
           options = {
-
             minimal.enable = true;
             graphical.enable = true;
+            dev.enable = true;
             vr.enable = true;
           };
         };
@@ -47,6 +47,7 @@
           system = "x86_64-linux";
           options = {
             minimal.enable = true;
+            dev.enable = true;
             graphical.enable = true;
           };
         };
@@ -61,6 +62,7 @@
           system = "x86_64-linux";
           options = {
             minimal.enable = true;
+            dev.enable = true;
             profile_name = "agilliar";
             ssh_trusted = false;
           };

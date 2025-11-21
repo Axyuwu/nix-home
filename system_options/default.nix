@@ -4,5 +4,6 @@
     ./minimal.nix
     ./graphical.nix
     ./vr.nix
+    ./dev.nix
   ];
 }
