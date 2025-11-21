@@ -76,7 +76,6 @@ in
         wineWowPackages.stable
         noto-fonts
         noto-fonts-cjk-sans
-        noto-fonts-extra
         noto-fonts-color-emoji
         telegram-desktop
         krita

@@ -80,8 +80,10 @@ in
       home-manager.enable = true;
       git = {
         enable = true;
-        userName = "Axy";
-        userEmail = "gilliardmarthey.axel@gmail.com";
+        settings.user = {
+          name = "Axy";
+          email = "gilliardmarthey.axel@gmail.com";
+        };
       };
       fzf.enable = true;
       direnv = {
