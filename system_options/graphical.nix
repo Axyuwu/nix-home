@@ -17,11 +17,6 @@ in
 
     sway.enable = true;
 
-    catppuccin = {
-      enable = true;
-      flavor = "macchiato";
-    };
-
     quickselect = {
       enable = true;
       programs = {
