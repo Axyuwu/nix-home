@@ -20,9 +20,12 @@ let
   hiblock = pkgs.writeShellApplication {
     name = "hiblock";
     text = ''
+      brightnessctl --save
+      brightnessctl set 10%
       ( sleep 120; systemctl suspend ) &
       hibernate=$!
       swaylock
+      brightnessctl --restore
       kill -s sigkill $hibernate
     '';
   };
