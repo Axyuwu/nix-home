@@ -17,6 +17,15 @@ let
       -o initial_window_height=16c \
       ${bin}
     '';
+  hiblock = pkgs.writeShellApplication {
+    name = "hiblock";
+    text = ''
+      ( sleep 120; systemctl suspend ) &
+      hibernate=$!
+      swaylock
+      kill -s sigkill $hibernate
+    '';
+  };
 in
 {
   options.sway = with lib; {
@@ -83,6 +92,7 @@ in
             "${modifier}+Shift+s" = "exec slurp | grim -g - - | wl-copy";
             "${modifier}+s" = "split toggle";
             "${modifier}+d" = "focus parent";
+            "${modifier}+Shift+y" = "exec hiblock";
             "${modifier}+Shift+q" = ''
               exec swaynag \
                 -t warning \
@@ -235,6 +245,20 @@ in
             format = " $icon $timestamp.datetime(f:'%A %d/%m/%Y %T') ";
           }
         ];
+      };
+    };
+
+    home.packages = [ hiblock ];
+
+    programs.swaylock = {
+      enable = true;
+      package = pkgs.swaylock-effects;
+      settings = {
+        screenshot = true;
+        effect-blur = "9x9";
+        clock = true;
+        indicator-caps-lock = true;
+        indicator = true;
       };
     };
 
