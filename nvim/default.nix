@@ -58,5 +58,6 @@ in
     lua-language-server
     nixfmt-rfc-style
     fd
+    texlab
   ];
 }

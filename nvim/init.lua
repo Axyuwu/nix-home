@@ -128,18 +128,23 @@ cmp.setup.cmdline(':', {
     matching = { disallow_symbol_nonprefix_matching = false }
 })
 
-local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
+vim.lsp.config('*', {
+    capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
+})
 
 local lspformat = require 'lsp-format'
 lspformat.setup {}
-local on_attach = lspformat.on_attach
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        lspformat.on_attach(client, args.buf)
+    end,
+})
 
 require 'lspconfig'
 
 vim.lsp.enable('nixd')
 vim.lsp.config('nixd', {
-    on_attach = on_attach,
-    capabilities = capabilities,
     settings = {
         formatting = {
             command = { "nixfmt" },
@@ -147,14 +152,8 @@ vim.lsp.config('nixd', {
     },
 })
 vim.lsp.enable('rust_analyzer')
-vim.lsp.config('rust_analyzer', {
-    on_attach = on_attach,
-    capabilities = capabilities,
-})
 vim.lsp.enable('lua_ls')
 vim.lsp.config('lua_ls', {
-    on_attach = on_attach,
-    capabilities = capabilities,
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name
@@ -189,6 +188,7 @@ vim.lsp.config('lua_ls', {
         }
     }
 })
+vim.lsp.enable('texlab')
 
 local ft_header = require '42header'
 ft_header.setup {

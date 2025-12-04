@@ -17,6 +17,7 @@ in
       nasm
       gnumake
       norminette
+      texliveMedium
     ];
     nvim.enable = true;
     programs = {
