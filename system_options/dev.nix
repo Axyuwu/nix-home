@@ -19,6 +19,9 @@ in
       norminette
       texliveMedium
     ];
+    home.file.".latexmkrc".text = ''
+      $pdf_previewer = 'start evince';
+    '';
     nvim.enable = true;
     programs = {
       gcc.enable = true;

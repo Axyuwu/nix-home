@@ -38,6 +38,7 @@ in
         "Thunderbird" = "thunderbird";
         "Video trimmer" = "video-trimmer";
         "Wdisplays" = "wdisplays";
+        "Evince" = "evince";
       };
     };
 
@@ -85,6 +86,7 @@ in
         video-trimmer
         wdisplays
         gamescope
+        evince
       ])
       ++ (
         let
