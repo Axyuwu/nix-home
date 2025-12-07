@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +26,6 @@
     {
       nur,
       nixpkgs,
-      nixpkgs-stable,
       home-manager,
       catppuccin,
       flake-utils,
@@ -76,7 +74,6 @@
           inherit system;
           overlays = [ nur.overlays.default ];
         };
-      pkgs-stable = system: import nixpkgs-stable { inherit system; };
     in
     (flake-utils.lib.eachDefaultSystem (system: {
       formatter = pkgs.legacyPackages.${system}.nixfmt-rfc-style;
@@ -87,9 +84,6 @@
         { system, options }:
         home-manager.lib.homeManagerConfiguration {
           pkgs = pkgs system;
-          extraSpecialArgs = {
-            nixpkgs-stable = pkgs-stable system;
-          };
           modules = [
             { nixpkgs.overlays = [ rust-overlay.overlays.default ]; }
             {
