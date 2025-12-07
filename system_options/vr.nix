@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  nixpkgs-stable,
   ...
 }:
 
@@ -24,7 +25,7 @@ in
     home.packages = (
       with pkgs;
       [
-        alvr
+        nixpkgs-stable.pkgs.alvr
         wlx-overlay-s
       ]
     );
