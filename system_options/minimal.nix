@@ -82,6 +82,7 @@ in
           name = "Axy";
           email = "gilliardmarthey.axel@gmail.com";
         };
+        settings.merge.tool = "nvimdiff";
       };
       fzf.enable = true;
       direnv = {
