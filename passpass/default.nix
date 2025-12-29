@@ -124,9 +124,9 @@ let
 
     cat "''${SECRETS[$INDEX]}"/value | secure_decrypt
   '';
-  passpass-schemas = {
-    account = [
-      {
+  passpass-schemas =
+    let
+      resource-schem = {
         display = "Resource";
         search = true;
         generator = ''
@@ -138,8 +138,8 @@ let
           done
           echo "$response"
         '';
-      }
-      {
+      };
+      email-schem = {
         header = "email";
         display = "EMail";
         search = true;
@@ -147,8 +147,8 @@ let
           read -r -p "EMail (Optional): " response </dev/tty
           echo "$response"
         '';
-      }
-      {
+      };
+      username-schem = {
         header = "username";
         display = "Username";
         search = true;
@@ -156,13 +156,17 @@ let
           read -r -p "Username (Optional): " response </dev/tty
           echo "$response"
         '';
-      }
-      {
+      };
+      password-schem = {
         header = "password";
         display = "Password";
         search = false;
         generator = ''
-          PASSWORD=$(head -c 24 <(tr -cd '[:alnum:]?!,.@;:' < /dev/random))
+          read -r -p "Password tr override? (Optional): " PASS_SCHEM < /dev/tty
+          if [[ "$PASS_SCHEM" == "" ]]; then
+            PASS_SCHEM='[:alnum:]?!,.@;:'
+          fi
+          PASSWORD=$(head -c 24 <(tr -cd "$PASS_SCHEM" < /dev/random))
           {
             echo "Password copied to clipboard 1/2"
             echo -n "$PASSWORD" | ${pkgs.wl-clipboard}/bin/wl-copy -o -f
@@ -171,9 +175,16 @@ let
           } >/dev/tty
           echo "$PASSWORD" 
         '';
-      }
-    ];
-  };
+      };
+    in
+    {
+      account = [
+        email-schem
+        resource-schem
+        username-schem
+        password-schem
+      ];
+    };
   schema-to-gen =
     name: schema:
     pkgs.writeShellScript "passpass-gen-${name}" ''
