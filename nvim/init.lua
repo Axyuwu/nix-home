@@ -189,6 +189,16 @@ vim.lsp.config('lua_ls', {
     }
 })
 vim.lsp.enable('texlab')
+vim.lsp.enable('pyright')
+vim.api.nvim_create_augroup("AutoFormat", {})
+vim.api.nvim_create_autocmd('BufWritePost', {
+    pattern = "*.py",
+    group = "AutoFormat",
+    callback = function()
+        vim.cmd("silent !black --quiet %")
+        vim.cmd("edit %")
+    end,
+})
 
 local ft_header = require '42header'
 ft_header.setup {

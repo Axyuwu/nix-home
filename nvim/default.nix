@@ -59,5 +59,7 @@ in
     nixfmt-rfc-style
     fd
     texlab
+    pyright
+    black
   ];
 }
