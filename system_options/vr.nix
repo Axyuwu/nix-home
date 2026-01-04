@@ -14,6 +14,7 @@ in
     system_options.graphical.enable = true;
     quickselect.programs = {
       "ALVR" = "steam-run alvr_dashboard";
+      "BSManager" = "bs-manager";
     };
 
     bsinstaller = {
@@ -26,6 +27,7 @@ in
       [
         alvr
         wlx-overlay-s
+        bs-manager
       ]
     );
   };

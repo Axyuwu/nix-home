@@ -53,7 +53,7 @@ gitsigns.setup {}
 local guessindent = require 'guess-indent'
 guessindent.setup {}
 
-local ts = require 'nvim-treesitter.configs'
+local ts = require 'nvim-treesitter'
 ts.setup {}
 
 local devicons = require 'nvim-web-devicons'
