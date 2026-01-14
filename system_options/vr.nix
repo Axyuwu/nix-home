@@ -26,7 +26,7 @@ in
       with pkgs;
       [
         alvr
-        wlx-overlay-s
+        wayvr
         bs-manager
       ]
     );
