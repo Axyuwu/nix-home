@@ -34,6 +34,7 @@ in
     nvim.enable = true;
     programs = {
       gcc.enable = true;
+      gemini-cli.enable = true; # i don't like llms but this is handy sometimes
     };
   };
 }
