@@ -76,7 +76,7 @@
         };
     in
     (flake-utils.lib.eachDefaultSystem (system: {
-      formatter = pkgs.legacyPackages.${system}.nixfmt-rfc-style;
+      formatter = pkgs.legacyPackages.${system}.nixfmt;
     }))
     // {
       homeConfigurations = builtins.mapAttrs (

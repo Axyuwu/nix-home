@@ -26,6 +26,7 @@ in
         gnumake
         norminette
         texliveMedium
+        poppler-utils
       ]
       ++ python-install;
     home.file.".latexmkrc".text = ''

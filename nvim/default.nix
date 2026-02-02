@@ -56,7 +56,7 @@ in
     rust-analyzer
     fzf
     lua-language-server
-    nixfmt-rfc-style
+    nixfmt
     fd
     texlab
     pyright
