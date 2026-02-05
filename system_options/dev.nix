@@ -11,6 +11,7 @@ let
     flake8
     virtualenv
     pip
+    mypy
   ];
 in
 {
