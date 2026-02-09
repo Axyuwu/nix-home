@@ -39,6 +39,7 @@ in
         "Video trimmer" = "video-trimmer";
         "Wdisplays" = "wdisplays";
         "Evince" = "evince";
+        "Element Desktop" = "element-desktop";
       };
     };
 
@@ -169,6 +170,7 @@ in
       obs-studio = {
         enable = true;
       };
+      element-desktop.enable = true;
     };
   };
 }
