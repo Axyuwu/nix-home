@@ -35,7 +35,7 @@ in
     home.stateVersion = "24.11";
 
     home.packages = with pkgs; [
-      neofetch
+      fastfetch
       htop
       zip
       unzip

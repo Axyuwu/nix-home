@@ -68,7 +68,7 @@ in
         v4l-utils
         ffmpeg
         mpv
-        wineWowPackages.stable
+        wineWow64Packages.stable
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-color-emoji
