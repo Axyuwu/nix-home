@@ -96,10 +96,14 @@ in
       };
       tmux = {
         enable = true;
+        escapeTime = 20;
+        focusEvents = true;
+        terminal = "screen-256color";
       };
       bat.enable = true;
       gpg.enable = true;
       neovim.enable = true;
+      ripgrep.enable = true;
     };
   };
 }
