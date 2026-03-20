@@ -135,6 +135,7 @@ in
           shell = "bash";
           clear_all_shortcuts = "yes";
           kitty_mod = "ctrl+shift";
+          clipboard_control = "None";
         };
         keybindings = {
           "f1" = "launch --cwd=current --type=os-window --copy-env";
