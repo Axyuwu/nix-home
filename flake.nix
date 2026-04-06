@@ -63,7 +63,6 @@
           options = {
             minimal.enable = true;
             dev.enable = true;
-            graphical.enable = true;
             profile_name = "agilliar";
             ssh_trusted = false;
           };
