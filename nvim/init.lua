@@ -132,17 +132,18 @@ vim.lsp.config('*', {
     capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
 })
 
-local lspformat = require 'lsp-format'
-lspformat.setup {}
-vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        lspformat.on_attach(client, args.buf)
-    end,
+require("conform").setup({
+    formatters_by_ft = {
+        {
+            lua = { "black" },
+            rust = { "rustfmt" },
+        }
+    },
+    format_on_save = {
+        timeout_ms = 500,
+        lsp_format = "fallback",
+    }
 })
-
-require 'lspconfig'
-
 vim.lsp.enable('nixd')
 vim.lsp.config('nixd', {
     settings = {
@@ -190,15 +191,6 @@ vim.lsp.config('lua_ls', {
 })
 vim.lsp.enable('texlab')
 vim.lsp.enable('pyright')
-vim.api.nvim_create_augroup("AutoFormat", {})
-vim.api.nvim_create_autocmd('BufWritePost', {
-    pattern = "*.py",
-    group = "AutoFormat",
-    callback = function()
-        vim.cmd("silent !black --quiet %")
-        vim.cmd("edit %")
-    end,
-})
 
 local ft_header = require '42header'
 ft_header.setup {

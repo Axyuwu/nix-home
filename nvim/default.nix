@@ -47,7 +47,7 @@ in
       luasnip
       gitsigns-nvim
       guess-indent-nvim
-      lsp-format-nvim
+      conform-nvim
       ft-header-nvim
     ];
   };
