@@ -32,7 +32,7 @@ in
   config = lib.mkIf cfg.enable {
     home.username = profile_name;
     home.homeDirectory = "/home/${profile_name}";
-    home.stateVersion = "24.11";
+    home.stateVersion = "26.05";
 
     home.packages = with pkgs; [
       fastfetch
