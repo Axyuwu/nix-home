@@ -25,7 +25,7 @@ in
     home.packages = (
       with pkgs;
       [
-        alvr
+        #alvr
         wayvr
         bs-manager
       ]
