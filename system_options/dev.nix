@@ -28,6 +28,7 @@ in
         norminette
         texliveMedium
         poppler-utils
+        valgrind
       ]
       ++ python-install;
     home.file.".latexmkrc".text = ''
