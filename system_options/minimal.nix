@@ -99,6 +99,7 @@ in
         escapeTime = 20;
         focusEvents = true;
         terminal = "screen-256color";
+        keyMode = "vi";
       };
       bat.enable = true;
       gpg.enable = true;
