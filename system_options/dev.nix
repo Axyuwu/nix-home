@@ -29,8 +29,7 @@ in
         texliveMedium
         poppler-utils
         valgrind
-        linuxPackages_latest.perf
-        libclang
+        perf
       ]
       ++ python-install;
     home.file.".latexmkrc".text = ''
