@@ -30,6 +30,7 @@ in
         poppler-utils
         valgrind
         linuxPackages_latest.perf
+        libclang
       ]
       ++ python-install;
     home.file.".latexmkrc".text = ''
