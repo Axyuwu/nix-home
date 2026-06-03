@@ -132,7 +132,7 @@ in
           size = 12;
         };
         settings = {
-          shell = "bash";
+          shell = "fish";
           clear_all_shortcuts = "yes";
           kitty_mod = "ctrl+shift";
           clipboard_control = "None";

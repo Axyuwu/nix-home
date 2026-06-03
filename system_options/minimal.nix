@@ -105,6 +105,12 @@ in
       gpg.enable = true;
       neovim.enable = true;
       ripgrep.enable = true;
+      fish = {
+        enable = true;
+        interactiveShellInit = ''
+          set fish_greeting
+        '';
+      };
     };
   };
 }
