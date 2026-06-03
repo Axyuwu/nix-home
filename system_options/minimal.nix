@@ -100,7 +100,7 @@ in
         focusEvents = true;
         terminal = "tmux-256color";
         keyMode = "vi";
-        shell = "fish";
+        shell = "${pkgs.fish}/bin/fish";
       };
       bat.enable = true;
       gpg.enable = true;
