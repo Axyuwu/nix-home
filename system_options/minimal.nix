@@ -98,8 +98,9 @@ in
         enable = true;
         escapeTime = 20;
         focusEvents = true;
-        terminal = "screen-256color";
+        terminal = "tmux-256color";
         keyMode = "vi";
+        shell = "fish";
       };
       bat.enable = true;
       gpg.enable = true;
