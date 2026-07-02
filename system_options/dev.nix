@@ -30,6 +30,7 @@ in
         poppler-utils
         valgrind
         perf
+        uv
       ]
       ++ python-install;
     home.file.".latexmkrc".text = ''
