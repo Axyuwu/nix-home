@@ -101,16 +101,6 @@ in
         ]
       );
 
-    nixpkgs.config = {
-      allowUnfreePredicate =
-        pkg:
-        builtins.elem (lib.getName pkg) [
-          "steam"
-          "steam-unwrapped"
-          "steam-run"
-        ];
-    };
-
     fonts.fontconfig.enable = true;
 
     gtk = {

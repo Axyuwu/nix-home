@@ -52,10 +52,15 @@ in
 
     catppuccin = {
       enable = true;
+      autoEnable = true;
       flavor = "macchiato";
     };
 
     passpass.enable = config.system_options.ssh_trusted;
+
+    nixpkgs.config = {
+      allowUnfree = true;
+    };
 
     blesh.enable = true;
     bash = {
