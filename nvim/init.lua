@@ -128,10 +128,8 @@ vim.lsp.config('*', {
 
 require("conform").setup({
     formatters_by_ft = {
-        {
-            lua = { "ruff format" },
-            rust = { "rustfmt" },
-        }
+        python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
+        rust = { "rustfmt" },
     },
     format_on_save = {
         timeout_ms = 500,
