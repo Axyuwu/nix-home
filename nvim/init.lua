@@ -113,20 +113,14 @@ cmp.setup {
 }
 
 cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = 'buffer' }
-    }
+    sources = { { name = 'buffer' } }
 })
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        { name = 'cmdline' }
-    }),
+
+cmp.setup.cmdline({ ':' }, {
+    sources = cmp.config.sources({ { name = 'buffer' }, { name = 'cmdline' } }),
     matching = { disallow_symbol_nonprefix_matching = false }
 })
+
 
 vim.lsp.config('*', {
     capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
@@ -135,7 +129,7 @@ vim.lsp.config('*', {
 require("conform").setup({
     formatters_by_ft = {
         {
-            lua = { "black" },
+            lua = { "ruff format" },
             rust = { "rustfmt" },
         }
     },
@@ -191,10 +185,3 @@ vim.lsp.config('lua_ls', {
 })
 vim.lsp.enable('texlab')
 vim.lsp.enable('pyright')
-
-local ft_header = require '42header'
-ft_header.setup {
-    auto_update = true,
-    user = "agilliar",
-    mail = "agilliar@student.42mulhouse.fr",
-}

@@ -7,16 +7,6 @@
 
 let
   cfg = config.nvim;
-  ft-header-nvim = pkgs.vimUtils.buildVimPlugin {
-    pname = "42-header.nvim";
-    version = "2025-04-16";
-    src = pkgs.fetchFromGitHub {
-      owner = "Diogo-ss";
-      repo = "42-header.nvim";
-      rev = "4303be09d9615e9169661b3e5d5a98c3eecee0ff";
-      hash = "sha256-7byIoFoaRag23Zej7ioL+2WjAv7Zttn1/WZrya0NZPo=";
-    };
-  };
 in
 {
   options.nvim = with lib; {
@@ -48,7 +38,6 @@ in
       gitsigns-nvim
       guess-indent-nvim
       conform-nvim
-      ft-header-nvim
     ];
   };
   config.home.packages = with pkgs; [
@@ -59,7 +48,8 @@ in
     nixfmt
     fd
     texlab
-    pyright
     black
+    ruff
+    pyright
   ];
 }
