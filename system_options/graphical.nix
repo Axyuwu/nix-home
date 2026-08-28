@@ -40,6 +40,7 @@ in
         "Wdisplays" = "wdisplays";
         "Evince" = "evince";
         "Element Desktop" = "element-desktop";
+        "Libreoffice" = "libreoffice";
       };
     };
 
@@ -88,6 +89,7 @@ in
         wdisplays
         gamescope
         evince
+        libreoffice
       ])
       ++ (
         let
