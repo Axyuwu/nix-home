@@ -182,4 +182,4 @@ vim.lsp.config('lua_ls', {
     }
 })
 vim.lsp.enable('texlab')
-vim.lsp.enable('pyright')
+vim.lsp.enable('ty')

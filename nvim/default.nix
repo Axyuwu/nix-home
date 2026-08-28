@@ -50,6 +50,6 @@ in
     texlab
     black
     ruff
-    pyright
+    ty
   ];
 }
