@@ -46,7 +46,6 @@ in
       age
       xxd
       bc
-      gcr
       homeupdate
     ];
 
